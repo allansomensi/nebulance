@@ -360,18 +360,15 @@ impl Game {
                     (BossKind::Queen, false),
                 ];
                 let campaign = self.cfg.mode == Mode::Campaign;
-                let theme = self.stage().theme;
-                // The region's own boss waits at the end of each region; the sectors
-                // before it are guarded by the other bosses in rotation.
-                let region_end = !campaign || ((sec * 8) / SECTORS) as usize != theme;
-                let (k, v) = if region_end {
-                    list[if campaign {
-                        theme
-                    } else {
-                        (sec as usize - 1) % 8
-                    }]
+                // Campaign bosses, sector by sector: each boss is met in order of
+                // difficulty, they alternate so none repeats back to back, and the hardest
+                // (the Eye, the armored Dreadnought, the Twins) only show up later.
+                const ORDER: [usize; 20] =
+                    [0, 1, 0, 2, 1, 3, 2, 4, 3, 5, 4, 6, 5, 2, 6, 3, 4, 5, 6, 7];
+                let (k, v) = if campaign {
+                    list[ORDER[(sec as usize - 1).min(19)]]
                 } else {
-                    list[(sec as usize * 3 + 1) % 7]
+                    list[(sec as usize - 1) % 8]
                 };
                 let fin = campaign && sec == SECTORS;
                 let lvl = if campaign {
