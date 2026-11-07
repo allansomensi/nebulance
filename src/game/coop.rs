@@ -1,4 +1,4 @@
-//! Local two-player co-op. The second ship shares the run, the score, the crystals and
+//! Local two-player co-op. The second ship shares the run, the score, the coins and
 //! the shop; each ship has its own lives, weapon, bombs and ability bar.
 //!
 //! Playing together:

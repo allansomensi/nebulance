@@ -100,9 +100,9 @@ impl Game {
                 CYAN
             };
             draw_rectangle(mx, H - 18.0, 50.0 * self.player.meter, 8.0, c);
-            sp.crystal[0].draw(vec2(284.0, H - 13.0), 2.0, 0.0, WHITE, false);
+            coins::draw_coin(vec2(284.0, H - 13.0), 50, self.time, 0.9);
             ui::text(
-                &format!("{}", self.crystals.floor() as u32),
+                &format!("{}", self.coins.floor() as u32),
                 294.0,
                 H - 6.0,
                 18.0,
@@ -196,7 +196,7 @@ impl Game {
         (self.mods.drones + self.drones_bought).min(3)
     }
 
-    pub fn crystals_visible(&self) -> bool {
+    pub fn coins_visible(&self) -> bool {
         !self.classic()
     }
 
@@ -359,15 +359,15 @@ impl Game {
                     GREEN,
                     Color::from_rgba(0, 30, 10, 255),
                 );
-                for (i, (label, v, crystal)) in lines.iter().enumerate().take(*shown) {
+                for (i, (label, v, coin)) in lines.iter().enumerate().take(*shown) {
                     let y = y0 + 90.0 + i as f32 * 32.0;
                     ui::text(label, 64.0, y, 18.0, WHITE);
-                    let val = if *crystal {
+                    let val = if *coin {
                         format!("+{v}")
                     } else {
                         format!("{v}")
                     };
-                    ui::text_r(&val, W - 64.0, y, 20.0, if *crystal { CYAN } else { GOLD });
+                    ui::text_r(&val, W - 64.0, y, 20.0, if *coin { CYAN } else { GOLD });
                 }
                 if *shown >= lines.len() && (t * 2.0) as i32 % 2 == 0 {
                     ui::hint_c(

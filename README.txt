@@ -8,7 +8,7 @@ stardust... and a signal. The signal called the Swarm: millions of
 star insects in attack formation. The fleet fell in hours. What's
 left: a hidden hangar, one ship and you.
 
-Clear 100 levels, take down whole formations, collect crystals, buy
+Clear 100 levels, take down whole formations, collect coins, buy
 stronger and stronger weapons and defeat the bosses of the Swarm.
 Alone or with a friend, on the keyboard or with gamepads.
 
@@ -49,7 +49,7 @@ On the game mode screen, set PLAYERS to 2.
   One gamepad:  P1 on the keyboard, P2 on the gamepad.
   Two gamepads: one each.
 Player 2 picks any ship player 1 has unlocked. Both ships share
-score, crystals and the shop; each has its own lives and bombs.
+score, coins and the shop; each has its own lives and bombs.
 Fly close together to fill the DUO bar, then press the ability
 button for the DUO BEAM. A ship that runs out of lives leaves a
 rescue capsule: fly into it to bring your partner back. Each ship
@@ -67,13 +67,18 @@ the next campaign from there.
 
 HOW TO GET STRONGER
 -------------------
-Between sectors there is the SHOP. The crystals you collect buy:
+Between sectors there is the SHOP. It sells everything, from the
+cheapest item to the most expensive, and it is the only place to
+get the strongest weapons. Coins are rare: they come in values of
+10, 25, 50, 100, 200 and 500. They buy:
+* FIRE SPEED: your shots start slow; each level fires faster.
 * WEAPONS: the more stars (* to *****), the stronger and pricier.
 * EVOLUTION: a weapon at level 5 can be evolved into a stronger
   form (a mini sun, twin beams, a seven-way fan...).
 * DAMAGE CORE: +15% damage on any weapon, up to 6 times.
-* Weapon upgrades, fire rate, speed, drones, side cannons, shield,
-  bombs, lives, autofire, laser sight and more.
+* Weapon upgrades, speed, drones, side cannons, shield, bombs,
+  lives (3 at most), autofire (lost when you die), laser sight and
+  more.
 Picking up the same weapon again raises its level (up to 5). The
 shop panel shows your total FIREPOWER.
 
@@ -97,7 +102,7 @@ TIPS
 * Only the center of your ship is vulnerable.
 * The capsule icon shows the weapon; the ring around it shows when
   it's about to change.
-* Crystals are blue diamonds. Enemy shots are always warm colors
+* Coins are round and show their value. Enemy shots are always warm colors
   (pink, orange, red or purple) with a dark outline.
 * Skulls follow you slowly. Shoot them before they reach you.
 * Explore. Not everything is written here.

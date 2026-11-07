@@ -149,9 +149,9 @@ impl Game {
                 let t = t + dt;
                 let want = ((t - 0.8) / 0.55).max(0.0) as usize;
                 while shown < want.min(lines.len()) {
-                    let (_, v, crystal) = &lines[shown];
-                    if *crystal {
-                        self.crystals += *v as f32;
+                    let (_, v, coin) = &lines[shown];
+                    if *coin {
+                        self.coins += *v as f32;
                     } else {
                         self.score += *v;
                     }
@@ -279,7 +279,7 @@ impl Game {
         if self.score >= 1_000_000 {
             self.ach(ach::MILLIONAIRE);
         }
-        if self.crystals >= 300.0 {
+        if self.coins >= 3000.0 {
             self.ach(ach::SCROOGE);
         }
         if self.score >= self.next_life_at {

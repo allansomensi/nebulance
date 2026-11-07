@@ -1,38 +1,22 @@
-//! Drops: crystals, capsules, power-ups, cards and what picking them up does.
+//! Drops: coins, capsules, power-ups, cards and what picking them up does.
 
 use super::*;
 
 impl Game {
     pub(super) fn spawn_drop(&mut self, pos: Vec2, kind: DropKind) {
-        // Too many crystals on screen clutter the view: new ones merge into the ones already falling.
-        if let DropKind::Crystal(v) = kind {
-            let n = self
-                .drops
-                .iter()
-                .filter(|d| matches!(d.kind, DropKind::Crystal(_)))
-                .count();
-            if n >= 24 {
-                let mut best: Option<usize> = None;
-                let mut bd = f32::MAX;
-                for (i, d) in self.drops.iter().enumerate() {
-                    if matches!(d.kind, DropKind::Crystal(_)) {
-                        let dist = d.pos.distance(pos);
-                        if dist < bd {
-                            bd = dist;
-                            best = Some(i);
-                        }
-                    }
-                }
-                if let Some(i) = best
-                    && let DropKind::Crystal(c) = &mut self.drops[i].kind
-                {
-                    *c += v;
-                    return;
-                }
+        // Older reward code speaks in "units" (1 unit = 10 coins): turn them into real coins.
+        // The small, frequent rewards only pay now and then, so coins stay rare.
+        if let DropKind::Coin(v) = kind
+            && !coins::DENOMS.contains(&v)
+        {
+            if v <= 2 && gen_range(0.0, 1.0) > 0.35 {
+                return;
             }
+            self.spawn_coins(pos, v * 10);
+            return;
         }
         let vel = match kind {
-            DropKind::Crystal(_) => vec2(gen_range(-70.0, 70.0), gen_range(-140.0, -40.0)),
+            DropKind::Coin(_) => vec2(gen_range(-70.0, 70.0), gen_range(-140.0, -40.0)),
             _ => vec2(0.0, -60.0),
         };
         self.drops.push(Drop {
@@ -44,7 +28,15 @@ impl Game {
     }
 
     pub(super) fn make_capsule(&self) -> DropKind {
-        let pool = self.weapon_pool();
+        // Capsules only carry ordinary weapons; the strong ones are sold in the shop.
+        let mut pool: Vec<Weapon> = self
+            .weapon_pool()
+            .into_iter()
+            .filter(|w| w.tier() <= 2)
+            .collect();
+        if pool.is_empty() {
+            pool.push(Weapon::Blaster);
+        }
         let want = if self.mods.capsule_four { 4 } else { 3 };
         let mut list: Vec<Weapon> = vec![];
         let mut tries = 0;
@@ -84,9 +76,7 @@ impl Game {
         for (i, d) in self.drops.iter_mut().enumerate() {
             d.age += dt;
             let pulled = match &d.kind {
-                DropKind::Crystal(_) => {
-                    alive && (d.pos.distance(pp) < magnet || all) && d.age > 0.25
-                }
+                DropKind::Coin(_) => alive && (d.pos.distance(pp) < magnet || all) && d.age > 0.25,
                 DropKind::Card(_) | DropKind::Log(_) => alive && card_magnet && d.age > 0.6,
                 DropKind::Capsule { .. }
                 | DropKind::Power(_)
@@ -100,7 +90,7 @@ impl Game {
                 d.vel += (target - d.vel) * (dt * 8.0).min(1.0);
             } else {
                 match &mut d.kind {
-                    DropKind::Crystal(_) => {
+                    DropKind::Coin(_) => {
                         d.vel.y = (d.vel.y + 260.0 * dt).min(150.0);
                         d.vel.x *= 1.0 - (dt * 1.5).min(1.0);
                     }
@@ -143,26 +133,26 @@ impl Game {
     pub(super) fn collect(&mut self, d: Drop, au: &mut Audio) {
         let pp = self.player.pos;
         match d.kind {
-            DropKind::Crystal(v) => {
-                let mut amount = v as f32 * self.mods.crystal_mul * self.event_crystal_mul();
-                self.enc.crystals += v;
-                if self.cfg.daily == Some(Daily::DoubleCrystals) {
+            DropKind::Coin(v) => {
+                let mut amount = v as f32 * self.mods.coin_mul * self.event_coin_mul();
+                self.enc.coins += v;
+                if self.cfg.daily == Some(Daily::DoubleCoins) {
                     amount *= 2.0;
                 }
                 if self.cfg.mode == Mode::Survival {
                     self.score += (amount * 50.0) as u32;
                 }
-                self.crystals += amount;
-                self.events.push(Event::Crystals(amount.round() as u32));
-                if self.mods.crystal_bomb {
-                    self.crystal_bomb_acc += amount;
-                    if self.crystal_bomb_acc >= 100.0 {
-                        self.crystal_bomb_acc -= 100.0;
+                self.coins += amount;
+                self.events.push(Event::Coins(amount.round() as u32));
+                if self.mods.coin_bomb {
+                    self.coin_bomb_acc += amount;
+                    if self.coin_bomb_acc >= 1000.0 {
+                        self.coin_bomb_acc -= 1000.0;
                         self.player.bombs = (self.player.bombs + 1).min(9);
                         self.fx.text(pp - vec2(0.0, 30.0), "+1 BOMB", GOLD, 18.0);
                     }
                 }
-                au.play_vol(Sfx::Crystal, 0.5);
+                au.play_vol(Sfx::Coin, 0.5);
                 self.fx.sparks(d.pos, vec2(0.0, -1.0), CYAN, 3);
             }
             DropKind::Capsule { weapons, idx, .. } => {
@@ -216,9 +206,9 @@ impl Game {
                     }
                     PowerKind::Bomb => self.player.bombs = (self.player.bombs + 1).min(9),
                     PowerKind::Shield => self.player.shield = true,
-                    PowerKind::Crystals => {
+                    PowerKind::Coins => {
                         for _ in 0..5 {
-                            self.spawn_drop(pp - vec2(0.0, 30.0), DropKind::Crystal(5));
+                            self.spawn_drop(pp - vec2(0.0, 30.0), DropKind::Coin(5));
                         }
                     }
                 }

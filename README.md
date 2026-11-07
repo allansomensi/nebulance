@@ -2,7 +2,10 @@
 
 A formation shoot 'em up with the soul of the 2000s shareware classics, written in Rust with
 [macroquad](https://macroquad.rs). Your ship only moves sideways, every tap of the fire button is a burst,
-and the crystals you collect buy stronger and stronger weapons between sectors.
+and the rare coins you collect (worth 10, 25, 50, 100, 200 or 500) buy stronger and stronger weapons
+between sectors. The shop sells everything, from the cheapest item to the most powerful weapons; capsules
+only carry ordinary weapons. Shots start slow until you buy FIRE SPEED, no ship holds more than 3 lives,
+and dying costs the autofire.
 
 - **100-level campaign** (20 sectors of 5 levels) with a steep difficulty curve and checkpoints at levels
   26, 51 and 76. Every level is different: its own formation (chevron, ring, spiral, star...), its own
@@ -61,7 +64,7 @@ Every game key and button can be remapped, separately for each player, in *Setti
 **Co-op:** choose *PLAYERS: 2* on the game mode screen; player 2 picks any ship player 1 has unlocked.
 With no gamepad, player 1 uses A D, Space/Z, X/G, C/H and left Shift, and player 2 uses the arrows, `,` (or
 Right Ctrl), `.` (Numpad 2), `/` (Numpad 3) and right Shift. With one gamepad, player 1 is on the keyboard and player 2 on the gamepad; with two, each player
-takes one. Both ships share the score, the crystals and the shop; each has its own lives and bombs.
+takes one. Both ships share the score, the coins and the shop; each has its own lives and bombs.
 
 ## Building for Windows
 
@@ -158,6 +161,7 @@ cargo run --release --features dev
 | `STARDUST_SCENE=0..2` | boss fights start in darkness, rising ground or meteor shower |
 | `STARDUST_NOFIRE=1` | the bot does not shoot (to look at formations) |
 | `STARDUST_EVOLVE=1` | the starting weapon begins evolved at level 5 |
+| `STARDUST_SHOP=1` | opens the shop at the start with 3000 coins |
 | `STARDUST_PADHINTS=1` | hints always show gamepad buttons |
 | `STARDUST_PROFILE=1` | prints CPU time per frame and slow frames |
 | `STARDUST_RESIZE=1` | resizes the window to 4K after 4 s (fullscreen test) |

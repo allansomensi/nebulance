@@ -49,7 +49,7 @@ pub struct Save {
     pub victories: u32,
     pub bombs_used: u32,
     pub grazes: u32,
-    pub crystals_total: u32,
+    pub coins_total: u32,
     pub best_combo: u32,
     pub bosses: u32,
     pub deaths: u32,
@@ -159,7 +159,7 @@ impl Default for Save {
             victories: 0,
             bombs_used: 0,
             grazes: 0,
-            crystals_total: 0,
+            coins_total: 0,
             best_combo: 0,
             bosses: 0,
             deaths: 0,
@@ -312,7 +312,7 @@ impl Save {
                 "victories" => s.victories = num(0),
                 "bombs_used" => s.bombs_used = num(0),
                 "grazes" => s.grazes = num(0),
-                "crystals_total" => s.crystals_total = num(0),
+                "coins_total" => s.coins_total = num(0),
                 "best_combo" => s.best_combo = num(0),
                 "bosses" => s.bosses = num(0),
                 "deaths" => s.deaths = num(0),
@@ -445,7 +445,7 @@ impl Save {
         kv("victories", self.victories.to_string());
         kv("bombs_used", self.bombs_used.to_string());
         kv("grazes", self.grazes.to_string());
-        kv("crystals_total", self.crystals_total.to_string());
+        kv("coins_total", self.coins_total.to_string());
         kv("best_combo", self.best_combo.to_string());
         kv("bosses", self.bosses.to_string());
         kv("deaths", self.deaths.to_string());

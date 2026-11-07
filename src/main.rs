@@ -405,7 +405,7 @@ const PROLOGUE: [&str; 9] = [
     "In the dust there was a signal. And the signal called the SWARM.",
     "Millions of star insects surrounded Earth in attack formation.",
     "The fleet fell in hours. What's left: a hidden hangar, one ship and you.",
-    "Every crystal you collect turns into better weapons at the mobile hangar.",
+    "Every coin you collect turns into better weapons at the mobile hangar.",
     "Clear all 100 levels. Reach the Heart of the Hive.",
     "Nobody knows what the Swarm wants. Good luck, pilot.",
 ];
@@ -417,7 +417,7 @@ const TIPS: [&str; 22] = [
     "The Eye only feels pain with its eyelid open.",
     "In the Ice Belt your ship slides. Plan ahead.",
     "Weavers don't hurt: they slow you down. Which is worse.",
-    "Crystals buy better weapons. Save up for the boss.",
+    "Coins buy better weapons. Save up for the boss.",
     "The shop's DAMAGE CORE makes every weapon stronger.",
     "Pricier weapons in the shop hit much harder.",
     "Hold fire and release: the charged shot pierces the formation.",
@@ -784,6 +784,9 @@ impl App {
         if let Some(w) = dev_env("STARDUST_WEAPON").and_then(|v| v.parse::<usize>().ok()) {
             g.player.weapon = WEAPONS[w.min(WEAPONS.len() - 1)];
         }
+        if dev_env("STARDUST_SHOP").is_some() {
+            g.debug_shop();
+        }
         if dev_env("STARDUST_EVOLVE").is_some() {
             g.player.level = 5;
             g.player.evolved_weapon = Some(g.player.weapon);
@@ -947,7 +950,7 @@ impl App {
                 Event::Bomb => self.save.bombs_used += 1,
                 Event::Rumble(seat, strength, ms) => self.rumble(seat, strength, ms),
                 Event::Graze => self.save.grazes += 1,
-                Event::Crystals(n) => self.save.crystals_total += n,
+                Event::Coins(n) => self.save.coins_total += n,
                 Event::Mastery(w) => {
                     if !self.save.mastery[w] {
                         self.save.mastery[w] = true;
@@ -3340,7 +3343,7 @@ impl App {
                     ("Grazes", s.grazes.to_string()),
                     ("Bombs used", s.bombs_used.to_string()),
                     ("Ships lost", s.deaths.to_string()),
-                    ("Crystals collected", s.crystals_total.to_string()),
+                    ("Coins collected", s.coins_total.to_string()),
                     ("Favorite weapon", fav.to_string()),
                     (
                         "Weapons mastered",
@@ -3903,12 +3906,12 @@ impl App {
                     Color::from_rgba(255, 80, 60, 255),
                 ),
                 ("*  Star: invincible, rams through".into(), GOLD),
-                ("U  Super magnet: pulls every crystal".into(), PINK),
+                ("U  Super magnet: pulls every coin".into(), PINK),
                 (
                     "Z  Slow motion for the world".into(),
                     Color::from_rgba(120, 160, 255, 255),
                 ),
-                ("S  Shield   B  Bomb   $  Crystals".into(), CYAN),
+                ("S  Shield   B  Bomb   $  Coins".into(), CYAN),
                 ("1UP  Extra life (rare!)".into(), GREEN),
                 ("".into(), WHITE),
                 ("ABILITIES".into(), GOLD),
@@ -3923,11 +3926,11 @@ impl App {
             3 => vec![
                 ("FEVER".into(), GOLD),
                 ("Combo 50 = Fever: double points and a".into(), WHITE),
-                ("crystal on every kill.".into(), WHITE),
+                ("coin on every kill.".into(), WHITE),
                 ("CONTRACTS".into(), GOLD),
                 ("3 missions per run. Complete them for XP".into(), WHITE),
                 (
-                    "and crystals. See them on pause or in the panel.".into(),
+                    "and coins. See them on pause or in the panel.".into(),
                     WHITE,
                 ),
                 ("SECTOR EVENTS".into(), GOLD),
@@ -3957,7 +3960,7 @@ impl App {
                 ("3 shots destroy a curse.".into(), WHITE),
                 ("RIFTS (hexagon with ?)".into(), CYAN),
                 ("They open a quick minigame. Win to earn".into(), WHITE),
-                ("crystals, levels, power-ups and cards.".into(), WHITE),
+                ("coins, levels, power-ups and cards.".into(), WHITE),
                 ("LETTERS S-T-A-R-D-U-S-T".into(), GOLD),
                 (
                     "Collect all 8: extra life and tons of points.".into(),
@@ -3984,7 +3987,7 @@ impl App {
                 ("cards you unlock more slots.".into(), WHITE),
                 ("".into(), WHITE),
                 ("SHOP AND POWER".into(), GOLD),
-                ("Between sectors, spend crystals on better".into(), WHITE),
+                ("Between sectors, spend coins on better".into(), WHITE),
                 ("weapons, Damage Cores, fire rate,".into(), WHITE),
                 ("drones and AUTOFIRE.".into(), WHITE),
                 ("The pricier the weapon, the stronger it is.".into(), WHITE),
@@ -4345,15 +4348,15 @@ impl App {
                 false,
             );
         }
-        if g.crystals_visible() {
+        if g.coins_visible() {
             ui::text_r(
-                &format!("{}", g.crystals.floor() as u32),
+                &format!("{}", g.coins.floor() as u32),
                 rx + cw,
                 y + 24.0,
                 22.0,
                 CYAN,
             );
-            self.sp.crystal[0].draw(vec2(rx + cw - 60.0, y + 16.0), 2.5, 0.0, WHITE, false);
+            game::coins::draw_coin(vec2(rx + cw - 60.0, y + 16.0), 50, self.time, 1.2);
         }
         y += 56.0;
         let w = p.weapon;

@@ -97,17 +97,7 @@ impl Game {
         for d in &self.drops {
             let p = d.pos + off;
             match &d.kind {
-                DropKind::Crystal(v) => {
-                    let f = ((self.time * 8.0 + d.age) as usize) % 2;
-                    let big = *v > 1;
-                    let r = if big { 11.0 } else { 7.0 };
-                    draw_circle(p.x, p.y, r, Color::new(0.3, 0.8, 1.0, 0.12));
-                    if big {
-                        sp.crystal_big[f].draw(p, 3.0, 0.0, WHITE, false);
-                    } else {
-                        sp.crystal[f].draw(p, 2.0, 0.0, WHITE, false);
-                    }
-                }
+                DropKind::Coin(v) => coins::draw_coin(p, *v, self.time + d.age, 1.3),
                 DropKind::Capsule { weapons, idx, t, n } => {
                     let w = weapons[*idx];
                     let cycle = if self.mods.capsule_four { 2.4 } else { 1.8 };
@@ -466,7 +456,7 @@ impl Game {
                 continue;
             }
             // Enemy shots: always warm or purple colors, with a dark outline
-            // and a white core. Crystals are always cyan-blue: they never get mixed up.
+            // and a white core. Coins are always cyan-blue: they never get mixed up.
             let (outer, inner) = match b.style {
                 1 => (
                     Color::from_rgba(255, 140, 40, 255),

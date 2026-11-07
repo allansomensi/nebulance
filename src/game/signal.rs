@@ -18,6 +18,8 @@ use crate::light;
 use std::f32::consts::TAU;
 
 const CORE_Y: f32 = 82.0;
+/// How close (sideways) a ship must be under a star for its shots to count.
+const NODE_AIM: f32 = 30.0;
 const ECHO_Y: f32 = 150.0;
 
 #[derive(Default)]
@@ -199,7 +201,7 @@ impl Game {
                     new_sequence(&mut s);
                     self.banner = Some((
                         "CONSTELLATION".into(),
-                        "Shoot the stars in the order they shine.".into(),
+                        "Fly under the stars and shoot them in the order they shine.".into(),
                         3.0,
                     ));
                 }
@@ -382,6 +384,17 @@ impl Game {
                     if s.show_t > 0.0 || s.exposed > 0.0 {
                         continue;
                     }
+                    // Only the star right above a ship counts: spreads, side cannons and
+                    // drones grazing the other stars can no longer break the sequence.
+                    if self.aligned_node(s) != Some(i) {
+                        self.fx.sparks(
+                            pos,
+                            vec2(0.0, 1.0),
+                            Color::from_rgba(150, 150, 220, 255),
+                            1,
+                        );
+                        continue;
+                    }
                     if s.order.get(s.progress) == Some(&i) {
                         s.progress += 1;
                         s.node_flash[i] = 0.5;
@@ -443,6 +456,32 @@ impl Game {
         }
     }
 
+    /// The star a ship is standing right under, if any.
+    fn aligned_node(&self, s: &Signal) -> Option<usize> {
+        let mut ships = vec![self.player.pos.x];
+        if let Some(p2) = &self.p2
+            && p2.alive()
+        {
+            ships.push(p2.pos.x);
+        }
+        s.nodes
+            .iter()
+            .enumerate()
+            .filter(|(_, n)| ships.iter().any(|x| (x - n.x).abs() < NODE_AIM))
+            .min_by(|a, b| {
+                let da = ships
+                    .iter()
+                    .map(|x| (x - a.1.x).abs())
+                    .fold(f32::MAX, f32::min);
+                let db = ships
+                    .iter()
+                    .map(|x| (x - b.1.x).abs())
+                    .fold(f32::MAX, f32::min);
+                da.total_cmp(&db)
+            })
+            .map(|(i, _)| i)
+    }
+
     /// The signal touches the ship (the echo's body or the collapse walls do not).
     pub(super) fn signal_touches(&self, p: Vec2, r: f32) -> bool {
         let Some(s) = &self.sig else { return false };
@@ -484,6 +523,23 @@ impl Game {
                 if s.show_t > 0.0 {
                     draw_line(a.x, a.y, b.x, b.y, 1.0, Color::new(0.8, 0.8, 1.0, 0.25));
                 }
+            }
+            // a faint guide from the ship to the star it is aiming at
+            if s.show_t <= 0.0
+                && s.exposed <= 0.0
+                && let Some(a) = self.aligned_node(s)
+            {
+                let n = s.nodes[a] + off;
+                let alpha = 0.18 + (s.t * 6.0).sin().abs() * 0.12;
+                draw_line(
+                    n.x,
+                    n.y + 16.0,
+                    n.x,
+                    PLAYER_Y + off.y - 20.0,
+                    6.0,
+                    Color::new(0.7, 0.8, 1.0, alpha),
+                );
+                draw_circle_lines(n.x, n.y, 20.0, 2.0, Color::new(0.8, 0.9, 1.0, 0.7));
             }
             for (i, n) in s.nodes.iter().enumerate() {
                 let p = *n + off;

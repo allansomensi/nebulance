@@ -23,12 +23,12 @@ impl Game {
             self.frenzy_t = self.frenzy_t.max(10.0);
         }
         if self.bank && self.wave > 1 {
-            let interest = (self.crystals * 0.1).floor();
-            self.crystals += interest;
+            let interest = (self.coins * 0.1).floor();
+            self.coins += interest;
             if interest > 0.0 {
                 self.fx.text(
                     vec2(W / 2.0, H * 0.55),
-                    format!("BANK: +{interest} CRYSTALS"),
+                    format!("BANK: +{interest} COINS"),
                     CYAN,
                     18.0,
                 );
@@ -602,7 +602,7 @@ impl Game {
         self.rerolls = 0;
         self.free_reroll_used = false;
         if self.cfg.mode == Mode::BossRush {
-            self.crystals += 50.0;
+            self.coins += 400.0;
         }
         self.roll_offers();
         if self.cfg.mode == Mode::Expedition {
@@ -725,7 +725,7 @@ impl Game {
             self.best_combo * 50,
             false,
         ));
-        lines.push(("BONUS CRYSTALS".to_string(), 15 + 8 * sec, true));
+        lines.push(("BONUS COINS".to_string(), 50 + 25 * sec, true));
         lines
     }
 
@@ -742,7 +742,7 @@ impl Game {
             for _ in 0..20 {
                 self.spawn_drop(
                     b.pos + vec2(gen_range(-40.0, 40.0), gen_range(-20.0, 20.0)),
-                    DropKind::Crystal(2 * base),
+                    DropKind::Coin(2 * base),
                 );
             }
             let luck = if b.final_boss { 2 } else { 1 };

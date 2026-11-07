@@ -173,11 +173,11 @@ impl Game {
                         self.score += 5000;
                         self.fx.text(res.part_pos, "+5000", GOLD, 20.0);
                         self.hitstop = 0.05;
-                        for _ in 0..3 {
+                        for v in [25, 25] {
                             self.drops.push(Drop {
                                 pos: res.part_pos,
                                 vel: vec2(gen_range(-70.0, 70.0), gen_range(-140.0, -40.0)),
-                                kind: DropKind::Crystal(1),
+                                kind: DropKind::Coin(v),
                                 age: 0.0,
                             });
                         }
@@ -257,7 +257,7 @@ impl Game {
             au.play_vol(Sfx::Pop, 0.7);
         }
         for p in rock_drops {
-            self.spawn_drop(p, DropKind::Crystal(1));
+            self.spawn_drop(p, DropKind::Coin(1));
         }
         self.rocks.extend(new_rocks);
 
@@ -423,6 +423,8 @@ impl Game {
         }
         let p = &mut self.player;
         p.lives -= 1;
+        // dying costs the autofire bought in the shop
+        self.arcade.autofire = false;
         if !keep {
             p.level = (p.level - 1).max(1);
         }
@@ -466,7 +468,7 @@ impl Game {
                     self.spawn_drop(pos, DropKind::Power(PowerKind::random()));
                     self.drop_log(10, pos);
                     for _ in 0..4 {
-                        self.spawn_drop(pos, DropKind::Crystal(5));
+                        self.spawn_drop(pos, DropKind::Coin(5));
                     }
                     self.banner = Some((
                         "MERCHANT'S GIFT".into(),
@@ -537,13 +539,10 @@ impl Game {
                     if !e.bonus {
                         au.play(Sfx::Fanfare);
                         for _ in 0..8 {
-                            self.spawn_drop(e.pos, DropKind::Crystal(5));
+                            self.spawn_drop(e.pos, DropKind::Coin(5));
                         }
-                        self.banner = Some((
-                            "GOLDEN SCARAB!".into(),
-                            "A fortune in crystals!".into(),
-                            2.0,
-                        ));
+                        self.banner =
+                            Some(("GOLDEN SCARAB!".into(), "A fortune in coins!".into(), 2.0));
                     }
                 }
                 Kind::Cow => {
@@ -554,7 +553,7 @@ impl Game {
                 }
                 Kind::Merchant => {
                     for _ in 0..12 {
-                        self.spawn_drop(e.pos, DropKind::Crystal(5));
+                        self.spawn_drop(e.pos, DropKind::Coin(5));
                     }
                 }
                 _ => {}
@@ -574,7 +573,7 @@ impl Game {
                 }
                 if e.kind == Kind::Golden {
                     for _ in 0..2 {
-                        self.spawn_drop(e.pos, DropKind::Crystal(1));
+                        self.spawn_drop(e.pos, DropKind::Coin(1));
                     }
                 }
                 continue;
@@ -599,22 +598,15 @@ impl Game {
             if self.classic() || matches!(e.kind, Kind::Golden | Kind::Cow | Kind::Merchant) {
                 continue;
             }
-            let mut n_crystals = match e.kind {
-                Kind::Beetle | Kind::Carrier => 3,
-                Kind::Gunner | Kind::Splitter | Kind::Shieldbearer => 2,
-                _ => (gen_range(0.0, 1.0) < 0.45) as i32,
-            };
-            if self.crystalizer && gen_range(0.0, 1.0) < 0.3 {
-                n_crystals += 1;
-            }
-            let base = 1 + (self.stage().tier.saturating_sub(1) / 3).min(3);
-            for _ in 0..n_crystals {
-                let v = if gen_range(0, 20) == 0 {
-                    5 * base
-                } else {
-                    base
-                };
-                self.spawn_drop(e.pos, DropKind::Crystal(v));
+            // Coins drop only now and then; commanders and big enemies more often.
+            let chance = match e.kind {
+                Kind::Beetle | Kind::Carrier | Kind::Leader | Kind::Freighter => 0.3,
+                Kind::Gunner | Kind::Splitter | Kind::Shieldbearer | Kind::Armored => 0.16,
+                _ => 0.08,
+            } * if e.elite { 2.0 } else { 1.0 }
+                * if self.purse { 1.35 } else { 1.0 };
+            if let Some(v) = coins::roll_coin(chance, self.stage().tier) {
+                self.spawn_drop(e.pos, DropKind::Coin(v));
             }
             let rain = if self.cfg.daily == Some(Daily::CapsuleRain) {
                 3.0

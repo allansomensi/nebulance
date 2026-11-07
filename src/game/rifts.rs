@@ -269,7 +269,7 @@ pub(super) fn fire_advanced(
                 b.phase = gen_range(0.0, TAU);
                 out.push(b);
             }
-            au.play_vol(Sfx::Crystal, 0.12);
+            au.play_vol(Sfx::Coin, 0.12);
             0.085
         }
         Weapon::SolarLance => {
@@ -925,7 +925,7 @@ impl Game {
         match grade {
             Grade::Defeat => {
                 for _ in 0..1 {
-                    self.spawn_drop(pp - vec2(0.0, 60.0), DropKind::Crystal(5));
+                    self.spawn_drop(pp - vec2(0.0, 60.0), DropKind::Coin(5));
                 }
             }
             Grade::Victory | Grade::Perfect => {
@@ -936,10 +936,7 @@ impl Game {
                 }
                 let n = if perfect { 12 } else { 6 };
                 for _ in 0..n {
-                    self.spawn_drop(
-                        pp - vec2(gen_range(-60.0, 60.0), 90.0),
-                        DropKind::Crystal(5),
-                    );
+                    self.spawn_drop(pp - vec2(gen_range(-60.0, 60.0), 90.0), DropKind::Coin(5));
                 }
                 let p = &mut self.player;
                 if !p.weapon.is_relic() && p.level < 5 {
@@ -956,7 +953,7 @@ impl Game {
                     self.spawn_drop(pp - vec2(30.0, 140.0), DropKind::Card(cards::roll(1)));
                 }
                 au.play(Sfx::Fanfare);
-                if self.rift.minigames_won == 3 {
+                if self.rift.minigames_won == 6 {
                     self.grant_relic(Weapon::Supernova, vec2(W / 2.0, 80.0));
                 }
             }
@@ -1083,15 +1080,9 @@ impl Game {
         self.fx.explosion(pos, GOLD, true);
         self.fx.flash = 0.6;
         self.fx.flash_color = GOLD;
-        for _ in 0..16 {
-            self.drops.push(Drop {
-                pos,
-                vel: vec2(gen_range(-200.0, 200.0), gen_range(-260.0, -60.0)),
-                kind: DropKind::Crystal(5),
-                age: 0.0,
-            });
-        }
-        if !self.rift.relics_given.contains(&Weapon::CosmicDust) {
+        self.spawn_coins(pos, 800);
+        // the reliquary holds the Relic only one time in four
+        if !self.rift.relics_given.contains(&Weapon::CosmicDust) && gen_range(0, 4) == 0 {
             self.grant_relic(Weapon::CosmicDust, pos);
         } else {
             self.spawn_drop(pos, DropKind::Card(cards::roll(2)));
@@ -1146,7 +1137,7 @@ impl Game {
         }
 
         // Singularity: swallow shots with black holes
-        if self.absorbed >= 150 && !self.classic() {
+        if self.absorbed >= 600 && !self.classic() {
             self.grant_relic(Weapon::Singularity, vec2(W / 2.0, 70.0));
         }
 
@@ -1171,7 +1162,7 @@ impl Game {
                     b.life = 0.0;
                     s.hp -= 1;
                     s.flash = 0.1;
-                    au.play_vol(Sfx::Crystal, 0.8);
+                    au.play_vol(Sfx::Coin, 0.8);
                 }
             }
             if s.hp <= 0 {
@@ -1189,7 +1180,7 @@ impl Game {
             if self.boss.is_some() || self.wave_kind != WaveKind::Normal || self.rift.room.is_some()
             {
                 for _ in 0..6 {
-                    self.spawn_drop(pos, DropKind::Crystal(5));
+                    self.spawn_drop(pos, DropKind::Coin(5));
                 }
             } else {
                 self.rift.room_enter = 1.2;
@@ -1223,7 +1214,7 @@ impl Game {
             });
             if caught > 0 {
                 self.rift.captured += caught;
-                self.crystals += caught as f32 * 0.5;
+                self.coins += caught as f32 * 3.0;
                 self.fx.sparks(pp, vec2(0.0, -1.0), CYAN, 2);
             }
         }
@@ -1307,9 +1298,9 @@ impl Game {
             self.fx
                 .text(d.pos - vec2(0.0, 20.0), "EXORCISED!", PINK, 16.0);
             for _ in 0..3 {
-                self.spawn_drop(d.pos, DropKind::Crystal(1));
+                self.spawn_drop(d.pos, DropKind::Coin(1));
             }
-            if self.rift.curses_shot_sector >= 3 {
+            if self.rift.curses_shot_sector >= 6 {
                 self.grant_relic(Weapon::SolarLance, d.pos);
             }
         }
@@ -1319,7 +1310,7 @@ impl Game {
         if let Some(r) = &mut self.rift.room
             && r.opened.is_none()
         {
-            let mut crystals = vec![];
+            let mut coins = vec![];
             for b in &mut self.bullets {
                 if b.life <= 0.0 || b.kind == BKind::Hole {
                     continue;
@@ -1330,7 +1321,7 @@ impl Game {
                         g.flash = 0.08;
                         b.life = 0.0;
                         if g.hp <= 0 {
-                            crystals.push(g.pos);
+                            coins.push(g.pos);
                         }
                         break;
                     }
@@ -1343,17 +1334,10 @@ impl Game {
                     }
                 }
             }
-            for p in crystals {
-                au.play(Sfx::Crystal);
+            for p in coins {
+                au.play(Sfx::Coin);
                 self.fx.burst(p, CYAN, 20, 180.0);
-                for _ in 0..4 {
-                    self.drops.push(Drop {
-                        pos: p,
-                        vel: vec2(gen_range(-120.0, 120.0), gen_range(-200.0, -40.0)),
-                        kind: DropKind::Crystal(5),
-                        age: 0.0,
-                    });
-                }
+                self.spawn_coins(p, 100);
             }
         }
         if open {
@@ -1667,7 +1651,7 @@ pub const BLESSINGS: [(&str, &str); 12] = [
         "ETERNAL SHIELD",
         "A fresh shield at the start of every sector.",
     ),
-    ("GREED", "Crystals +30% for the rest of the expedition."),
+    ("GREED", "Coins +30% for the rest of the expedition."),
     ("AMULET", "Half of the curses can't touch you anymore."),
     ("RIFTS", "Minigame rifts drop 2.5x more often."),
     ("DRONE", "+1 support drone (max 3)."),
@@ -1721,7 +1705,7 @@ impl Game {
                 self.rift.shield_each = true;
                 self.player.shield = true;
             }
-            6 => self.mods.crystal_mul *= 1.3,
+            6 => self.mods.coin_mul *= 1.3,
             7 => self.mods.amulet = true,
             8 => self.mods.rift_mul *= 2.5,
             9 => self.drones_bought += 1,
@@ -1820,7 +1804,7 @@ impl Game {
                 3 => Icon::Star,
                 4 => Icon::Bomb,
                 5 => Icon::Shield,
-                6 => Icon::Crystal,
+                6 => Icon::Coin,
                 7 => Icon::Disc,
                 8 => Icon::Target,
                 9 => Icon::Drone,

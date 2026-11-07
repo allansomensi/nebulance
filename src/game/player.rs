@@ -62,6 +62,10 @@ impl Game {
     }
 
     pub(super) fn update_timers(&mut self, dt: f32) {
+        self.player.lives = self.player.lives.min(MAX_LIVES);
+        if let Some(p2) = &mut self.p2 {
+            p2.lives = p2.lives.min(MAX_LIVES);
+        }
         self.update_rails(dt);
         for t in [
             &mut self.frenzy_t,
@@ -244,7 +248,8 @@ impl Game {
         };
         let rate = self.mods.fire_mul
             * ship.fire
-            * (1.0 + 0.1 * p.fire_lvl as f32)
+            // shots start slow: FIRE SPEED from the shop is what makes them fast
+            * (0.5 + 0.12 * p.fire_lvl as f32)
             * if self.frenzy_t > 0.0 { 2.0 } else { 1.0 }
             * if self.overdrive_t > 0.0 { 2.0 } else { 1.0 }
             * daily_x2

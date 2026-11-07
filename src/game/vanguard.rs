@@ -142,7 +142,7 @@ impl Game {
             .ring(e.pos, 260.0, 0.5, Color::from_rgba(255, 210, 80, 255), 4.0);
         self.fx.text(e.pos, "THE SWARM REGROUPS!", GOLD, 18.0);
         for _ in 0..6 {
-            self.spawn_drop(e.pos, DropKind::Crystal(3));
+            self.spawn_drop(e.pos, DropKind::Coin(3));
         }
     }
 

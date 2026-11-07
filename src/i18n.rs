@@ -189,16 +189,13 @@ static EXACT: &[(&str, &str)] = &[
     ),
     ("+2 bombs", "+2 bombas"),
     ("+2 bombs now.", "+2 bombas agora."),
-    ("+25 CRYSTALS", "+25 CRISTAIS"),
-    (
-        "+25000 points and 30 crystals",
-        "+25000 pontos e 30 cristais",
-    ),
+    ("+25 COINS", "+25 MOEDAS"),
+    ("+25000 points and 250 coins", "+25000 pontos e 250 moedas"),
     (
         "+3 lives. You know what you did.",
         "+3 vidas. Você sabe o que fez.",
     ),
-    ("+45 crystals", "+45 cristais"),
+    ("+300 coins", "+300 moedas"),
     (
         "100 levels, bosses, shop and cards. The full adventure.",
         "100 níveis, chefes, loja e cartas. A aventura completa.",
@@ -228,8 +225,8 @@ static EXACT: &[(&str, &str)] = &[
         "30% mais forte e 10% mais rápida.",
     ),
     (
-        "4 s catching nearby shots: each one becomes a crystal.",
-        "4 s capturando os tiros por perto: cada um vira cristal.",
+        "4 s catching nearby shots: each one becomes a coin.",
+        "4 s capturando os tiros por perto: cada um vira moeda.",
     ),
     (
         "5 s firing twice as fast, one weapon level higher.",
@@ -274,8 +271,8 @@ static EXACT: &[(&str, &str)] = &[
         "Uma bola de fogo ardente que explode e espalha brasas.",
     ),
     (
-        "A calf follows you and gathers crystals. Moo.",
-        "Um bezerro te acompanha e recolhe cristais. Muuu.",
+        "A calf follows you and gathers coins. Moo.",
+        "Um bezerro te acompanha e recolhe moedas. Muuu.",
     ),
     (
         "A comet that pierces deep and bursts into twice the shards.",
@@ -286,8 +283,8 @@ static EXACT: &[(&str, &str)] = &[
         "Um cometa que o Enxame domou. Sua cauda solta poeira estelar que fere.",
     ),
     (
-        "A consolation prize: 5 crystals.",
-        "Uma lembrança de consolo: 5 cristais.",
+        "A consolation prize: a few coins.",
+        "Um prêmio de consolação: algumas moedas.",
     ),
     (
         "A drone that fires with you.",
@@ -301,7 +298,7 @@ static EXACT: &[(&str, &str)] = &[
         "A flying nursery. Releases hatchlings while alive.",
         "Uma creche voadora. Solta filhotes enquanto estiver viva.",
     ),
-    ("A fortune in crystals!", "Uma fortuna em cristais!"),
+    ("A fortune in coins!", "Uma fortuna em moedas!"),
     (
         "A fresh shield at the start of every sector.",
         "Um escudo novo no começo de cada setor.",
@@ -454,7 +451,7 @@ static EXACT: &[(&str, &str)] = &[
     ("BOMB", "BOMBA"),
     ("BOMBS", "BOMBAS"),
     ("BONUS", "BÔNUS"),
-    ("BONUS CRYSTALS", "CRISTAIS DE BÔNUS"),
+    ("BONUS COINS", "MOEDAS DE BÔNUS"),
     ("BONUS RESULT", "RESULTADO DO BÔNUS"),
     ("BONUS STAGE", "ESTÁGIO BÔNUS"),
     ("BOOMERANG", "BUMERANGUE"),
@@ -488,12 +485,12 @@ static EXACT: &[(&str, &str)] = &[
     ("Best sector", "Melhor setor"),
     ("Best wave (survival)", "Melhor onda (sobrevivência)"),
     (
-        "Between sectors, spend crystals on better",
-        "Entre os setores, gaste cristais em armas",
+        "Between sectors, spend coins on better",
+        "Entre os setores, gaste moedas em armas",
     ),
     (
-        "Black holes last twice as long and suck in crystals.",
-        "Buracos negros duram o dobro e sugam cristais.",
+        "Black holes last twice as long and suck in coins.",
+        "Buracos negros duram o dobro e sugam moedas.",
     ),
     (
         "Blades that fly out and come back.",
@@ -560,6 +557,8 @@ static EXACT: &[(&str, &str)] = &[
     ("CLASSIC mode", "Modo CLÁSSICO"),
     ("CLOVER", "TREVO"),
     ("CODE ACCEPTED", "CÓDIGO ACEITO"),
+    ("COIN RAIN", "CHUVA DE MOEDAS"),
+    ("COINS!", "MOEDAS!"),
     ("COLLAPSE", "COLAPSO"),
     ("COLLECTION", "COLEÇÃO"),
     ("COLONEL", "CORONEL"),
@@ -589,9 +588,6 @@ static EXACT: &[(&str, &str)] = &[
     ("CROSS", "CRUZ"),
     ("CRT FILTER", "FILTRO CRT"),
     ("CRYO", "CRIO"),
-    ("CRYSTAL RAIN", "CHUVA DE CRISTAIS"),
-    ("CRYSTALLIZER", "CRISTALIZADOR"),
-    ("CRYSTALS!", "CRISTAIS!"),
     (
         "Can only be hurt with its eyelid open. Its gaze sweeps space with beams.",
         "Só pode ser ferido com a pálpebra aberta. Seu olhar varre o espaço com raios.",
@@ -627,7 +623,7 @@ static EXACT: &[(&str, &str)] = &[
         "Carries two biological cannons. Stops mid-screen to fire a spread.",
         "Carrega dois canhões biológicos. Para no meio da tela para disparar em leque.",
     ),
-    ("Catch the falling crystals.", "Pegue os cristais que caem."),
+    ("Catch the falling coins.", "Pegue as moedas que caem."),
     ("Challenge complete!", "Desafio completo!"),
     ("Change ships in the HANGAR.", "Troque de nave no HANGAR."),
     (
@@ -666,6 +662,31 @@ static EXACT: &[(&str, &str)] = &[
         "Co-op: PLAYERS 2 on the mode screen",
         "Co-op: JOGADORES 2 na tela de modo",
     ),
+    ("Coin Wings", "Asas de Moeda"),
+    ("Coin magnet radius +60%.", "Raio do ímã de moedas +60%."),
+    (
+        "Coins +15% and 20% bigger magnet.",
+        "Moedas +15% e ímã 20% maior.",
+    ),
+    (
+        "Coins +30% for the rest of the expedition.",
+        "Moedas +30% pelo resto da expedição.",
+    ),
+    ("Coins are worth 25% more.", "Moedas valem 25% a mais."),
+    (
+        "Coins are worth double this sector.",
+        "Moedas valem o dobro neste setor.",
+    ),
+    (
+        "Coins buy better weapons. Save up for the boss.",
+        "Moedas compram armas melhores. Guarde para o chefe.",
+    ),
+    ("Coins collected", "Moedas coletadas"),
+    (
+        "Coins come to you from anywhere.",
+        "Moedas vêm até você de qualquer lugar.",
+    ),
+    ("Coins x1.5 and points x1.2.", "Moedas x1,5 e pontos x1,2."),
     (
         "Collect all 8: extra life and tons of points.",
         "Junte as 8: vida extra e muitos pontos.",
@@ -711,37 +732,6 @@ static EXACT: &[(&str, &str)] = &[
     ("Cosmic Tourist", "Turista Cósmico"),
     ("Counterattack", "Contra-Ataque"),
     ("Creator", "Criador"),
-    ("Crystal Wings", "Asas de Cristal"),
-    (
-        "Crystal magnet radius +60%.",
-        "Raio do ímã de cristais +60%.",
-    ),
-    (
-        "Crystals +15% and 20% bigger magnet.",
-        "Cristais +15% e ímã 20% maior.",
-    ),
-    (
-        "Crystals +30% for the rest of the expedition.",
-        "Cristais +30% pelo resto da expedição.",
-    ),
-    ("Crystals are worth 25% more.", "Cristais valem 25% a mais."),
-    (
-        "Crystals are worth double this sector.",
-        "Cristais valem o dobro neste setor.",
-    ),
-    (
-        "Crystals buy better weapons. Save up for the boss.",
-        "Cristais compram armas melhores. Guarde para o chefe.",
-    ),
-    ("Crystals collected", "Cristais coletados"),
-    (
-        "Crystals come to you from anywhere.",
-        "Cristais vêm até você de qualquer lugar.",
-    ),
-    (
-        "Crystals x1.5 and points x1.2.",
-        "Cristais x1,5 e pontos x1,2.",
-    ),
     ("Curious", "Curioso"),
     ("Curses drop 50% less often.", "Maldições caem 50% menos."),
     ("Curses exorcised / taken", "Maldições exorcizadas / pegas"),
@@ -769,7 +759,7 @@ static EXACT: &[(&str, &str)] = &[
         "DISC weapon and HARD difficulty",
         "Arma DISCO e dificuldade DIFÍCIL",
     ),
-    ("DOUBLE CRYSTALS", "CRISTAIS EM DOBRO"),
+    ("DOUBLE COINS", "MOEDAS EM DOBRO"),
     ("DOUBLE SHOTS", "TIROS DOBRADOS"),
     ("DRIFTING", "À DERIVA"),
     ("DRONE", "ZANGÃO"),
@@ -834,16 +824,16 @@ static EXACT: &[(&str, &str)] = &[
     ("Don't Blink", "Não Pisque"),
     ("Double Arsenal", "Arsenal Duplo"),
     (
+        "Double coins, shop 50% more expensive.",
+        "Moedas em dobro, loja 50% mais cara.",
+    ),
+    (
         "Double contract rewards.",
         "Recompensas de contratos em dobro.",
     ),
     (
-        "Double crystals, shop 50% more expensive.",
-        "Cristais em dobro, loja 50% mais cara.",
-    ),
-    (
-        "Double points and crystals on every kill!",
-        "Pontos em dobro e cristais a cada abate!",
+        "Double points and coins on every kill!",
+        "Pontos em dobro e moedas a cada abate!",
     ),
     ("Double reward and a card!", "Prêmio dobrado e uma carta!"),
     (
@@ -895,8 +885,8 @@ static EXACT: &[(&str, &str)] = &[
     ),
     ("Early Fever", "Febre Precoce"),
     (
-        "Earns 15% of your crystals every sector.",
-        "Rende 15% dos cristais a cada setor.",
+        "Earns 15% of your coins every sector.",
+        "Rende 15% das moedas a cada setor.",
     ),
     (
         "Eclipse, meteors, ambushes, convoys...",
@@ -917,10 +907,7 @@ static EXACT: &[(&str, &str)] = &[
         "Endless sectors. Every sector, pick 1 of 3 blessings. How far can you go?",
         "Setores sem fim. A cada setor, escolha 1 de 3 bênçãos. Até onde você vai?",
     ),
-    (
-        "Enemies drop more crystals.",
-        "Inimigos soltam mais cristais.",
-    ),
+    ("Enemies drop more coins.", "Inimigos soltam mais moedas."),
     ("Enemies shot down", "Inimigos abatidos"),
     (
         "Enemies stay frozen twice as long.",
@@ -962,8 +949,8 @@ static EXACT: &[(&str, &str)] = &[
     ),
     ("Event Horizon", "Horizonte de Eventos"),
     (
-        "Every 100 crystals collected, +1 bomb.",
-        "A cada 100 cristais coletados, +1 bomba.",
+        "Every 1000 coins collected, +1 bomb.",
+        "A cada 1000 moedas coletadas, +1 bomba.",
     ),
     (
         "Every 6 shots, a fan of 6 stars.",
@@ -977,11 +964,11 @@ static EXACT: &[(&str, &str)] = &[
         "Every boss in a row, against the clock.",
         "Todos os chefes em sequência, contra o relógio.",
     ),
-    ("Every crash costs you.", "Cada batida custa caro."),
     (
-        "Every crystal you collect turns into better weapons at the mobile hangar.",
-        "Cada cristal recolhido vira armas melhores no hangar móvel.",
+        "Every coin you collect turns into better weapons at the mobile hangar.",
+        "Cada moeda recolhida vira armas melhores no hangar móvel.",
     ),
+    ("Every crash costs you.", "Cada batida custa caro."),
     (
         "Every few seconds it pulses and mends the wounds and armor of everyone around it. Kill it first.",
         "A cada poucos segundos pulsa e cura as feridas e a armadura de todos ao redor. Mate-o primeiro.",
@@ -1036,6 +1023,7 @@ static EXACT: &[(&str, &str)] = &[
     ("FEVER!", "FEBRE!"),
     ("FIRE", "FOGO"),
     ("FIRE RATE", "CADÊNCIA"),
+    ("FIRE SPEED", "VELOCIDADE DE TIRO"),
     ("FIRE trail", "Rastro FOGO"),
     ("FIREBALL", "BOLA DE FOGO"),
     ("FIREPOWER", "PODER DE FOGO"),
@@ -1055,8 +1043,8 @@ static EXACT: &[(&str, &str)] = &[
     ("Farmer", "Fazendeiro"),
     ("Farthest in Expedition", "Mais longe na Expedição"),
     (
-        "Fast and greedy: +20% crystals.",
-        "Rápida e gananciosa: +20% de cristais.",
+        "Fast and greedy: +20% coins.",
+        "Rápida e gananciosa: +20% de moedas.",
     ),
     (
         "Fast and jumpy. Loves to dive in spirals before returning to formation.",
@@ -1130,7 +1118,6 @@ static EXACT: &[(&str, &str)] = &[
         "Fire rate +12% for the rest of the expedition.",
         "Cadência +12% pelo resto da expedição.",
     ),
-    ("Fires 10% faster.", "Atira 10% mais rápido."),
     (
         "Fires exploding cows. Nobody can explain it.",
         "Dispara vacas explosivas. Ninguém explica.",
@@ -1152,6 +1139,10 @@ static EXACT: &[(&str, &str)] = &[
         "Fly into the capsule. Only once per run!",
         "Voe até a cápsula. Só uma vez por partida!",
     ),
+    (
+        "Fly under the stars and shoot them in the order they shine.",
+        "Voe sob as estrelas e atire nelas na ordem em que brilham.",
+    ),
     ("Fool's Gold", "Ouro de Tolo"),
     (
         "Freeze 150 enemies in total.",
@@ -1162,8 +1153,8 @@ static EXACT: &[(&str, &str)] = &[
         "Congela: congelados levam dano dobrado.",
     ),
     (
-        "Freighters full of crystals cross the screen.",
-        "Cargueiros lotados de cristais cruzam a tela.",
+        "Freighters full of coins cross the screen.",
+        "Cargueiros lotados de moedas cruzam a tela.",
     ),
     (
         "From what? ...that's for the next cycle.",
@@ -1272,8 +1263,8 @@ static EXACT: &[(&str, &str)] = &[
         "Acerte todos os inimigos de um estágio bônus.",
     ),
     (
-        "Hold 300 crystals at once.",
-        "Tenha 300 cristais ao mesmo tempo.",
+        "Hold 3000 coins at once.",
+        "Tenha 3000 moedas ao mesmo tempo.",
     ),
     (
         "Hold and release . charged shot",
@@ -1413,6 +1404,7 @@ static EXACT: &[(&str, &str)] = &[
     ("LOOT", "SAQUE"),
     ("LOW", "BAIXO"),
     ("LOW ORBIT", "ÓRBITA BAIXA"),
+    ("LUCKY PURSE", "BOLSA DA SORTE"),
     ("LV 5", "NV 5"),
     ("Last Breath", "Último Suspiro"),
     (
@@ -1439,7 +1431,7 @@ static EXACT: &[(&str, &str)] = &[
         "Live through all 6 sector events.",
         "Viva os 6 eventos de setor.",
     ),
-    ("Living Crystal", "Cristal Vivo"),
+    ("Living Coin", "Moeda Viva"),
     (
         "Logs drop from campaign bosses and from",
         "Registros caem dos chefes da campanha e de",
@@ -1456,7 +1448,7 @@ static EXACT: &[(&str, &str)] = &[
         "Perder uma nave não reduz o nível da arma.",
     ),
     ("Lucky", "Sortudo"),
-    ("Lucky Crystal", "Cristal da Sorte"),
+    ("Lucky Coin", "Moeda da Sorte"),
     ("Lucrative Contract", "Contrato Lucrativo"),
     ("MADE WITH", "FEITO EM"),
     ("MAGNET", "ÍMÃ"),
@@ -1737,8 +1729,8 @@ static EXACT: &[(&str, &str)] = &[
         "Armas mais caras na loja batem muito mais forte.",
     ),
     (
-        "Pulls crystals from farther away.",
-        "Puxa cristais de mais longe.",
+        "Pulls coins from farther away.",
+        "Puxa moedas de mais longe.",
     ),
     ("Pyromaniac", "Piromaníaco"),
     ("QUIT", "SAIR"),
@@ -1836,8 +1828,8 @@ static EXACT: &[(&str, &str)] = &[
         "Trocar teclas: CONFIGURAÇÕES > CONTROLES",
     ),
     (
-        "Reward: crystals, a weapon level and a power-up.",
-        "Prêmio: cristais, nível de arma e um poder.",
+        "Reward: coins, a weapon level and a power-up.",
+        "Prêmio: moedas, nível de arma e um poder.",
     ),
     ("Rock Salt", "Sal Grosso"),
     (
@@ -1855,8 +1847,8 @@ static EXACT: &[(&str, &str)] = &[
     ),
     ("Runs", "Partidas"),
     (
-        "S  Shield   B  Bomb   $  Crystals",
-        "S  Escudo   B  Bomba   $  Cristais",
+        "S  Shield   B  Bomb   $  Coins",
+        "S  Escudo   B  Bomba   $  Moedas",
     ),
     ("SCORE", "PONTOS"),
     ("SCREEN SHAKE", "TREMOR DE TELA"),
@@ -2005,10 +1997,6 @@ static EXACT: &[(&str, &str)] = &[
         "Derrube a Nave-Mãe misteriosa.",
     ),
     ("Shoot one down to record it.", "Abata um para registrar."),
-    (
-        "Shoot the stars in the order they shine.",
-        "Atire nas estrelas na ordem em que brilham.",
-    ),
     ("Shoot them or dodge them!", "Atire neles ou desvie!"),
     (
         "Shoots sticky webs that slow your ship down for a few seconds.",
@@ -2069,8 +2057,8 @@ static EXACT: &[(&str, &str)] = &[
     ("Speedrunner", "Velocista"),
     ("Speller", "Soletrador"),
     (
-        "Spend your crystals before the next sector",
-        "Gaste seus cristais antes do próximo setor",
+        "Spend your coins before the next sector",
+        "Gaste suas moedas antes do próximo setor",
     ),
     (
         "Splitters, Kamikazes, Shieldbearers, Weavers,",
@@ -2086,7 +2074,7 @@ static EXACT: &[(&str, &str)] = &[
         "Starts the run with the LASER at level 2.",
         "Começa a partida com o LASER no nível 2.",
     ),
-    ("Starts with 40 crystals.", "Começa com 40 cristais."),
+    ("Starts with 400 coins.", "Começa com 400 moedas."),
     (
         "Starts with a shield that absorbs one hit.",
         "Começa com um escudo que absorve um golpe.",
@@ -2111,8 +2099,8 @@ static EXACT: &[(&str, &str)] = &[
     ),
     ("Swarm", "Enxame"),
     (
-        "Swarm cargo ship. Doesn't shoot and is packed with crystals.",
-        "Nave de carga do Enxame. Não atira e está lotada de cristais.",
+        "Swarm cargo ship. Doesn't shoot and is packed with coins.",
+        "Nave de carga do Enxame. Não atira e está lotada de moedas.",
     ),
     ("TARGET PRACTICE", "TIRO AO ALVO"),
     ("TARGET SIZE", "TAMANHO DO ALVO"),
@@ -2145,7 +2133,6 @@ static EXACT: &[(&str, &str)] = &[
     ("TIPS ON PAUSE", "DICAS NA PAUSA"),
     ("TRAIL EQUIPPED", "RASTRO EQUIPADO"),
     ("TREASURE MAP", "MAPA DO TESOURO"),
-    ("TRIGGER", "GATILHO"),
     ("TWIN BLOCKS", "BLOCOS GÊMEOS"),
     ("TWIN STAR", "ESTRELA GÊMEA"),
     ("TWISTING", "GIRANDO"),
@@ -2306,8 +2293,8 @@ static EXACT: &[(&str, &str)] = &[
         "O escudo volta depois de 25 s sem levar dano.",
     ),
     (
-        "The ship of the Stardust mission. 50% bigger crystal magnet.",
-        "A nave da missão Stardust. Ímã de cristais 50% maior.",
+        "The ship of the Stardust mission. 50% bigger coin magnet.",
+        "A nave da missão Stardust. Ímã de moedas 50% maior.",
     ),
     (
         "The shop's DAMAGE CORE makes every weapon stronger.",
@@ -2386,8 +2373,8 @@ static EXACT: &[(&str, &str)] = &[
         "Duas sondas levam um disco de ouro. Diga o nome delas no ranking.",
     ),
     (
-        "U  Super magnet: pulls every crystal",
-        "U  Super ímã: puxa todos os cristais",
+        "U  Super magnet: pulls every coin",
+        "U  Super ímã: puxa todas as moedas",
     ),
     ("UNTOUCHABLE", "INTOCÁVEL"),
     ("UNTOUCHABLE INSIGNIA", "INSÍGNIA DO INTOCÁVEL"),
@@ -2422,8 +2409,8 @@ static EXACT: &[(&str, &str)] = &[
     ),
     ("Varied Arsenal", "Arsenal Variado"),
     (
-        "Very rare. Flees fast, but carries a fortune in crystals.",
-        "Raríssimo. Foge rápido, mas carrega uma fortuna em cristais.",
+        "Very rare. Flees fast, but carries a fortune in coins.",
+        "Raríssimo. Foge rápido, mas carrega uma fortuna em moedas.",
     ),
     ("Victories", "Vitórias"),
     ("WARNING!", "ALERTA!"),
@@ -2533,6 +2520,10 @@ static EXACT: &[(&str, &str)] = &[
         "A próxima morte não tira nível da arma.",
     ),
     (
+        "Your shots fire faster. Up to 8 levels.",
+        "Seus tiros saem mais rápido. Até 8 níveis.",
+    ),
+    (
         "Your shots fly 15% faster.",
         "Seus tiros voam 15% mais rápido.",
     ),
@@ -2561,14 +2552,15 @@ static EXACT: &[(&str, &str)] = &[
         "Z  Câmera lenta para o mundo",
     ),
     ("ZENITH DREADNOUGHT", "COURAÇADO ZÊNITE"),
+    ("^ MORE ^", "^ MAIS ^"),
     ("a formation shoot 'em up", "um shoot 'em up de formações"),
     ("and brought back a story", "e trouxe de volta uma história"),
     (
-        "and crystals. See them on pause or in the panel.",
-        "e cristais. Veja na pausa ou no painel.",
+        "and coins. See them on pause or in the panel.",
+        "e moedas. Veja na pausa ou no painel.",
     ),
     ("and repeat them with the ARROWS.", "e repita com as SETAS."),
-    ("ate 20 crystals", "comeu 20 cristais"),
+    ("ate 200 coins", "comeu 200 moedas"),
     (
         "bonus stage and a boss. Then, the shop.",
         "estágio bônus e um chefe. Depois, loja.",
@@ -2585,12 +2577,12 @@ static EXACT: &[(&str, &str)] = &[
         "carrying samples of stardust... and something more.",
         "trazendo amostras de poeira estelar... e algo mais.",
     ),
-    ("composing the soundtrack...", "compondo a trilha sonora..."),
-    ("crystal on every kill.", "cristal em cada abate."),
+    ("coin on every kill.", "moeda em cada abate."),
     (
-        "crystals, levels, power-ups and cards.",
-        "cristais, níveis, poderes e cartas.",
+        "coins, levels, power-ups and cards.",
+        "moedas, níveis, poderes e cartas.",
     ),
+    ("composing the soundtrack...", "compondo a trilha sonora..."),
     ("drones and AUTOFIRE.", "drones e no TIRO AUTOMÁTICO."),
     ("embedded font", "fonte embutida"),
     ("empty", "vazio"),
@@ -2625,6 +2617,7 @@ static EXACT: &[(&str, &str)] = &[
         "unlocks ships, weapons, modes and paints.",
         "libera naves, armas, modos e pinturas.",
     ),
+    ("v MORE v", "v MAIS v"),
     (
         "weapons, Damage Cores, fire rate,",
         "melhores, Núcleos de Dano, cadência,",
@@ -2709,10 +2702,6 @@ static TEMPLATES: &[(&[&str], &[&str])] = &[
         &["Acerte os alvos com ", "."],
     ),
     (
-        &["", "  ·  +", " XP  +", " crystals"],
-        &["", "  ·  +", " XP  +", " cristais"],
-    ),
-    (
         &["ROUND ", " of 3 · ", " stars"],
         &["RODADA ", " de 3 · ", " estrelas"],
     ),
@@ -2730,23 +2719,27 @@ static TEMPLATES: &[(&[&str], &[&str])] = &[
         &["INSÍGNIAS DE HONRA  ", "/", ""],
     ),
     (&["DEPART FOR SECTOR ", ""], &["PARTIR PARA O SETOR ", ""]),
+    (
+        &["", "  ·  +", " XP  +", " coins"],
+        &["", "  ·  +", " XP  +", " moedas"],
+    ),
     (&["CONTINUE - CYCLE ", ""], &["CONTINUAR - CICLO ", ""]),
-    (&["Collect ", " crystals"], &["Colete ", " cristais"]),
     (&["FARTHEST: SECTOR ", ""], &["MAIS LONGE: SETOR ", ""]),
     (&["RULE OF THE DAY: ", ""], &["REGRA DO DIA: ", ""]),
     (&["", " of ", " achievements"], &["", " de ", " conquistas"]),
     (&["", " READY FOR LAUNCH"], &["", " PRONTA PARA DECOLAR"]),
     (&["", " equips the trail"], &["", " equipa o rastro"]),
-    (&["BANK: +", " CRYSTALS"], &["BANCO: +", " CRISTAIS"]),
     (&["LIGHTNING WAVE +", ""], &["ONDA RELÂMPAGO +", ""]),
     (&["REROLL OFFERS (", ")"], &["TROCAR OFERTAS (", ")"]),
     (&["TRAIL: ", " (IN USE)"], &["RASTRO: ", " (EM USO)"]),
     (&["Reach the rank ", ""], &["Alcance a patente ", ""]),
     (&["Freeze ", " enemies"], &["Congele ", " inimigos"]),
     (&["ACHIEVEMENTS ", "/", ""], &["CONQUISTAS ", "/", ""]),
+    (&["Collect ", " coins"], &["Colete ", " moedas"]),
     (&["FACE THE BOSS ", ""], &["ENFRENTAR O CHEFE ", ""]),
     (&["Grab ", " capsules"], &["Pegue ", " cápsulas"]),
     (&["SHARPSHOOTER +", ""], &["TIRO CERTEIRO +", ""]),
+    (&["BANK: +", " COINS"], &["BANCO: +", " MOEDAS"]),
     (&["ACHIEVEMENT: ", ""], &["CONQUISTA: ", ""]),
     (&["Make a ", " combo"], &["Faça um combo de ", ""]),
     (
@@ -2776,7 +2769,6 @@ static TEMPLATES: &[(&[&str], &[&str])] = &[
     (&["DUO READY: ", ""], &["DUO PRONTO: ", ""]),
     (&["ARCHIVES ", "/", ""], &["ARQUIVOS ", "/", ""]),
     (&["BOSS ", " OF 9"], &["CHEFE ", " DE 9"]),
-    (&["CRYSTALS: ", ""], &["CRISTAIS: ", ""]),
     (&["FEVER x2  ", ""], &["FEBRE x2  ", ""]),
     (&["NEW CARD: ", ""], &["NOVA CARTA: ", ""]),
     (&["ACCURACY ", "%"], &["PRECISÃO ", "%"]),
@@ -2808,6 +2800,7 @@ static TEMPLATES: &[(&[&str], &[&str])] = &[
     (&["CARDS ", "/", ""], &["CARTAS ", "/", ""]),
     (&["BOSS ", "/8"], &["CHEFE ", "/8"]),
     (&["COMBO x", ""], &["COMBO x", ""]),
+    (&["COINS: ", ""], &["MOEDAS: ", ""]),
     (&["DRONES ", ""], &["DRONES ", ""]),
     (&["EVENT: ", ""], &["EVENTO: ", ""]),
     (&["TODAY: ", ""], &["HOJE: ", ""]),

@@ -76,25 +76,20 @@ pub const CARDS: &[CardDef] = &[
     ),
     c(
         "Portable Magnet",
-        "Crystal magnet radius +60%.",
+        "Coin magnet radius +60%.",
         Common,
         Magnet,
     ),
     c("Turbo Engine", "Ship 12% faster.", Common, Engine),
     c("Light Trigger", "Fire rate +10%.", Common, Bolt),
-    c(
-        "Lucky Crystal",
-        "Crystals are worth 25% more.",
-        Common,
-        Crystal,
-    ),
+    c("Lucky Coin", "Coins are worth 25% more.", Common, Coin),
     c(
         "Strong Start",
         "Your weapon starts at level 2.",
         Common,
         Star,
     ),
-    c("Piggy Bank", "Starts with 40 crystals.", Common, Bag),
+    c("Piggy Bank", "Starts with 400 coins.", Common, Bag),
     c(
         "Starting Shield",
         "Starts with a shield that absorbs one hit.",
@@ -141,10 +136,10 @@ pub const CARDS: &[CardDef] = &[
         Disc,
     ),
     c(
-        "Crystal Wings",
-        "Crystals come to you from anywhere.",
+        "Coin Wings",
+        "Coins come to you from anywhere.",
         Legendary,
-        Crystal,
+        Coin,
     ),
     c(
         "Dangerous Graze",
@@ -179,10 +174,10 @@ pub const CARDS: &[CardDef] = &[
         Shield,
     ),
     c(
-        "Living Crystal",
-        "Every 100 crystals collected, +1 bomb.",
+        "Living Coin",
+        "Every 1000 coins collected, +1 bomb.",
         Epic,
-        Crystal,
+        Coin,
     ),
     c("Investor", "The first shop reroll is free.", Rare, Bag),
     c(
@@ -206,12 +201,12 @@ pub const CARDS: &[CardDef] = &[
         Legendary,
         Heart,
     ),
-    s("Creator", "Crystals x1.5 and points x1.2.", Legendary, Disc),
+    s("Creator", "Coins x1.5 and points x1.2.", Legendary, Disc),
     s(
         "Golden Dimension",
         "A Golden Scarab appears every sector.",
         Legendary,
-        Crystal,
+        Coin,
     ),
     s("Pacifist", "Bonus stages are worth double.", Epic, Shield),
     c(
@@ -249,9 +244,9 @@ pub const CARDS: &[CardDef] = &[
     ),
     c(
         "Event Horizon",
-        "Black holes last twice as long and suck in crystals.",
+        "Black holes last twice as long and suck in coins.",
         Legendary,
-        Crystal,
+        Coin,
     ),
     c(
         "Elite Hunter",
@@ -276,7 +271,7 @@ pub const CARDS: &[CardDef] = &[
     ),
     s(
         "Cosmic Calf",
-        "A calf follows you and gathers crystals. Moo.",
+        "A calf follows you and gathers coins. Moo.",
         Legendary,
         Heart,
     ),
@@ -304,10 +299,10 @@ pub const CARDS: &[CardDef] = &[
         Rare,
         Target,
     ),
-    c("Rock Salt", "Curses drop 50% less often.", Common, Crystal),
+    c("Rock Salt", "Curses drop 50% less often.", Common, Coin),
     c(
         "Comet Dust",
-        "Crystals +15% and 20% bigger magnet.",
+        "Coins +15% and 20% bigger magnet.",
         Epic,
         Star,
     ),
@@ -352,7 +347,7 @@ pub mod id {
     pub const VARIED: usize = 28;
     pub const AIM: usize = 29;
     pub const INHERITANCE: usize = 30;
-    pub const LIVING_CRYSTAL: usize = 31;
+    pub const LIVING_COIN: usize = 31;
     pub const INVESTOR: usize = 32;
     pub const COUNTER: usize = 33;
     pub const CARD_MAGNET: usize = 34;
@@ -433,9 +428,9 @@ pub struct Mods {
     pub magnet_mul: f32,
     pub speed_mul: f32,
     pub fire_mul: f32,
-    pub crystal_mul: f32,
+    pub coin_mul: f32,
     pub start_level: i32,
-    pub start_crystals: u32,
+    pub start_coins: u32,
     pub start_shield: bool,
     pub combo_mul: f32,
     pub dive_mul: u32,
@@ -458,7 +453,7 @@ pub struct Mods {
     pub capsule_four: bool,
     pub shot_speed: f32,
     pub keep_level: bool,
-    pub crystal_bomb: bool,
+    pub coin_bomb: bool,
     pub free_reroll: bool,
     pub counter: bool,
     pub card_magnet: bool,
@@ -494,7 +489,7 @@ impl Mods {
             magnet_mul: 1.0,
             speed_mul: 1.0,
             fire_mul: 1.0,
-            crystal_mul: 1.0,
+            coin_mul: 1.0,
             start_level: 1,
             combo_mul: 1.0,
             dive_mul: 2,
@@ -527,9 +522,9 @@ impl Mods {
                 MAGNET => m.magnet_mul = 1.6,
                 TURBO => m.speed_mul = 1.12,
                 TRIGGER => m.fire_mul = 1.1,
-                LUCK => m.crystal_mul *= 1.25,
+                LUCK => m.coin_mul *= 1.25,
                 STRONG_START => m.start_level = m.start_level.max(2),
-                PIGGY_BANK => m.start_crystals += 40,
+                PIGGY_BANK => m.start_coins += 400,
                 SHIELD => m.start_shield = true,
                 COMBO => m.combo_mul = 1.5,
                 HUNTER => m.dive_mul = 3,
@@ -559,7 +554,7 @@ impl Mods {
                 VARIED => m.capsule_four = true,
                 AIM => m.shot_speed = 1.15,
                 INHERITANCE => m.keep_level = true,
-                LIVING_CRYSTAL => m.crystal_bomb = true,
+                LIVING_COIN => m.coin_bomb = true,
                 INVESTOR => m.free_reroll = true,
                 COUNTER => m.counter = true,
                 CARD_MAGNET => m.card_magnet = true,
@@ -572,7 +567,7 @@ impl Mods {
                 }
                 KONAMI => m.extra_lives += 3,
                 CREATOR => {
-                    m.crystal_mul *= 1.5;
+                    m.coin_mul *= 1.5;
                     m.score_mul *= 1.2;
                 }
                 DIMENSION => m.golden_every = true,
@@ -606,7 +601,7 @@ impl Mods {
                 OPEN_RIFT => m.rift_mul *= 2.0,
                 ROCK_SALT => m.curse_mul *= 0.5,
                 COMET_DUST => {
-                    m.crystal_mul *= 1.15;
+                    m.coin_mul *= 1.15;
                     m.magnet_mul *= 1.2;
                 }
                 _ => {}

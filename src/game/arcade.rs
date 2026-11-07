@@ -86,8 +86,8 @@ impl Game {
     pub(super) fn open_box(&mut self, au: &mut Audio) {
         let (title, sub) = match gen_range(0, 100) {
             0..=19 => {
-                self.crystals += 45.0;
-                ("CRYSTALS!", "+45 crystals")
+                self.coins += 300.0;
+                ("COINS!", "+300 coins")
             }
             20..=34 => {
                 if self.player.level < 5 && !self.player.weapon.is_relic() {
@@ -119,8 +119,8 @@ impl Game {
             }
             80..=89 => ("EMPTY...", "it was just stardust"),
             _ => {
-                self.crystals = (self.crystals - 20.0).max(0.0);
-                ("A MOTH!", "ate 20 crystals")
+                self.coins = (self.coins - 200.0).max(0.0);
+                ("A MOTH!", "ate 200 coins")
             }
         };
         self.banner = Some((title.into(), sub.into(), 2.2));
@@ -280,7 +280,7 @@ impl Game {
         self.wave = self.sector() * 5 + 1;
         self.sectors_cleared += 1;
         self.score += 25_000;
-        self.crystals += 30.0;
+        self.coins += 250.0;
         self.arcade.warps += 1;
         self.ach(ach::SHORTCUT);
         au.play(Sfx::Portal);
@@ -288,7 +288,7 @@ impl Game {
         self.fx.flash_color = WHITE;
         self.banner = Some((
             "SPACE WARP!".into(),
-            "+25000 points and 30 crystals".into(),
+            "+25000 points and 250 coins".into(),
             2.5,
         ));
         self.phase = Phase::Intro { t: 0.0 };
@@ -377,7 +377,7 @@ impl Game {
                 26.0,
             );
             for _ in 0..3 {
-                self.spawn_drop(pos, DropKind::Crystal(5));
+                self.spawn_drop(pos, DropKind::Coin(5));
             }
             if self.arcade.letters.iter().any(|l| !l) && gen_range(0, 100) < 60 {
                 self.drop_letter(pos);

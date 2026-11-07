@@ -133,7 +133,7 @@ pub enum Daily {
     DoubleShots,
     FastEnemies,
     LaserOnly,
-    DoubleCrystals,
+    DoubleCoins,
     Fog,
     Mirror,
     ThinGlass,
@@ -144,7 +144,7 @@ pub const DAILIES: [Daily; 8] = [
     Daily::DoubleShots,
     Daily::FastEnemies,
     Daily::LaserOnly,
-    Daily::DoubleCrystals,
+    Daily::DoubleCoins,
     Daily::Fog,
     Daily::Mirror,
     Daily::ThinGlass,
@@ -157,7 +157,7 @@ impl Daily {
             Daily::DoubleShots => "DOUBLE SHOTS",
             Daily::FastEnemies => "FAST ENEMIES",
             Daily::LaserOnly => "LASER ONLY",
-            Daily::DoubleCrystals => "DOUBLE CRYSTALS",
+            Daily::DoubleCoins => "DOUBLE COINS",
             Daily::Fog => "FOG",
             Daily::Mirror => "MIRROR",
             Daily::ThinGlass => "THIN GLASS",
@@ -169,7 +169,7 @@ impl Daily {
             Daily::DoubleShots => "You and the enemies fire twice as much.",
             Daily::FastEnemies => "Dives 40% faster, points x2.",
             Daily::LaserOnly => "Only the Laser exists, but it starts at level 3.",
-            Daily::DoubleCrystals => "Double crystals, shop 50% more expensive.",
+            Daily::DoubleCoins => "Double coins, shop 50% more expensive.",
             Daily::Fog => "You can only see near your ship.",
             Daily::Mirror => "Left becomes right. Good luck.",
             Daily::ThinGlass => "Only one life, but points x3.",
@@ -409,7 +409,7 @@ pub const ACHS: &[AchDef] = &[
         300,
     ),
     a("Millionaire", "Score 1,000,000 points in one run.", 1500),
-    a("Scrooge", "Hold 300 crystals at once.", 250),
+    a("Scrooge", "Hold 3000 coins at once.", 250),
     a("Collector", "Find 20 different cards.", 500),
     a(
         "Completionist",
@@ -881,7 +881,7 @@ pub const BESTIARY: &[Lore] = &[
     },
     Lore {
         name: "GOLDEN SCARAB",
-        text: "Very rare. Flees fast, but carries a fortune in crystals.",
+        text: "Very rare. Flees fast, but carries a fortune in coins.",
     },
     Lore {
         name: "COSMIC COW",
@@ -925,7 +925,7 @@ pub const BESTIARY: &[Lore] = &[
     },
     Lore {
         name: "FREIGHTER",
-        text: "Swarm cargo ship. Doesn't shoot and is packed with crystals.",
+        text: "Swarm cargo ship. Doesn't shoot and is packed with coins.",
     },
     Lore {
         name: "THE TWINS",

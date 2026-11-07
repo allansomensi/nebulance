@@ -173,7 +173,7 @@ pub enum Sfx {
     Clang,
     PlayerDie,
     Powerup,
-    Crystal,
+    Coin,
     CardGet,
     Bomb,
     MenuMove,
@@ -313,7 +313,7 @@ fn sfx_samples(s: Sfx) -> Vec<f32> {
             a
         }
         Sfx::Powerup => notes(&[72.0, 76.0, 79.0, 84.0, 88.0], 0.05, 0.3, 0.5),
-        Sfx::Crystal => notes(&[93.0, 100.0], 0.04, 0.16, 0.25),
+        Sfx::Coin => notes(&[93.0, 100.0], 0.04, 0.16, 0.25),
         Sfx::CardGet => {
             let mut a = notes(
                 &[84.0, 88.0, 91.0, 96.0, 91.0, 96.0, 100.0],
@@ -1077,7 +1077,7 @@ const ALL_SFX: [Sfx; SFX_COUNT] = [
     Sfx::Clang,
     Sfx::PlayerDie,
     Sfx::Powerup,
-    Sfx::Crystal,
+    Sfx::Coin,
     Sfx::CardGet,
     Sfx::Bomb,
     Sfx::MenuMove,

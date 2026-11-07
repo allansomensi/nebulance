@@ -15,6 +15,7 @@ use macroquad::rand::gen_range;
 
 pub mod arcade;
 pub mod arsenal;
+pub mod coins;
 mod collisions;
 pub mod coop;
 mod draw;
@@ -36,6 +37,11 @@ pub mod vanguard;
 mod waves;
 
 pub const COLS: usize = 8;
+/// No ship ever holds more than this many lives.
+pub const MAX_LIVES: i32 = 3;
+/// Levels of FIRE SPEED the shop sells.
+pub const MAX_FIRE_LVL: u32 = 8;
+
 /// Ceiling for every drop-rate boost (cards, shop items, blessings), so the screen never
 /// floods with items.
 const MAX_DROP_BOOST: f32 = 1.6;
@@ -385,7 +391,7 @@ enum PowerKind {
     ExtraLife,
     Bomb,
     Shield,
-    Crystals,
+    Coins,
 }
 
 impl PowerKind {
@@ -398,7 +404,7 @@ impl PowerKind {
             PowerKind::ExtraLife => "1UP",
             PowerKind::Bomb => "B",
             PowerKind::Shield => "S",
-            PowerKind::Crystals => "$",
+            PowerKind::Coins => "$",
         }
     }
     fn name(self) -> &'static str {
@@ -410,7 +416,7 @@ impl PowerKind {
             PowerKind::ExtraLife => "EXTRA LIFE!",
             PowerKind::Bomb => "+1 BOMB",
             PowerKind::Shield => "SHIELD!",
-            PowerKind::Crystals => "+25 CRYSTALS",
+            PowerKind::Coins => "+25 COINS",
         }
     }
     fn color(self) -> Color {
@@ -422,7 +428,7 @@ impl PowerKind {
             PowerKind::ExtraLife => Color::from_rgba(120, 255, 120, 255),
             PowerKind::Bomb => Color::from_rgba(200, 200, 210, 255),
             PowerKind::Shield => Color::from_rgba(100, 230, 255, 255),
-            PowerKind::Crystals => Color::from_rgba(120, 220, 255, 255),
+            PowerKind::Coins => Color::from_rgba(120, 220, 255, 255),
         }
     }
     fn random() -> PowerKind {
@@ -434,7 +440,7 @@ impl PowerKind {
             56..=59 => PowerKind::ExtraLife,
             60..=74 => PowerKind::Bomb,
             75..=86 => PowerKind::Shield,
-            _ => PowerKind::Crystals,
+            _ => PowerKind::Coins,
         }
     }
 }
@@ -446,7 +452,7 @@ enum DropKind {
         idx: usize,
         t: f32,
     },
-    Crystal(u32),
+    Coin(u32),
     Card(usize),
     Power(PowerKind),
     Log(usize),
@@ -581,7 +587,7 @@ pub enum Event {
     BossKilled,
     Bomb,
     Graze,
-    Crystals(u32),
+    Coins(u32),
     Mastery(usize),
     MerchantSpared,
     Victory,
@@ -624,7 +630,7 @@ enum Item {
     Bank,
     Radar,
     Amulet,
-    Crystallizer,
+    Purse,
     TreasureMap,
     Mercenary,
     MysteryCard,
@@ -645,7 +651,7 @@ impl Item {
             Item::Upgrade => "WEAPON UPGRADE".into(),
             Item::Weapon(w) => format!("{}  {}", w.name(), "*".repeat(w.tier() as usize)),
             Item::Thruster => "THRUSTER".into(),
-            Item::Trigger => "TRIGGER".into(),
+            Item::Trigger => "FIRE SPEED".into(),
             Item::Magnet => "MAGNET".into(),
             Item::Drone => "ATTACK DRONE".into(),
             Item::SideCannons => "SIDE CANNONS".into(),
@@ -654,7 +660,7 @@ impl Item {
             Item::Bank => "STAR BANK".into(),
             Item::Radar => "CARD RADAR".into(),
             Item::Amulet => "AMULET".into(),
-            Item::Crystallizer => "CRYSTALLIZER".into(),
+            Item::Purse => "LUCKY PURSE".into(),
             Item::TreasureMap => "TREASURE MAP".into(),
             Item::Mercenary => "MERCENARY".into(),
             Item::MysteryCard => "MYSTERY CARD".into(),
@@ -674,16 +680,16 @@ impl Item {
             Item::Upgrade => "+1 level on the current weapon.",
             Item::Weapon(w) => w.desc(),
             Item::Thruster => "Ship 8% faster.",
-            Item::Trigger => "Fires 10% faster.",
-            Item::Magnet => "Pulls crystals from farther away.",
+            Item::Trigger => "Your shots fire faster. Up to 8 levels.",
+            Item::Magnet => "Pulls coins from farther away.",
             Item::Drone => "A drone that fires with you.",
             Item::SideCannons => "Extra diagonal shots.",
             Item::Insurance => "Your next death won't cost a weapon level.",
             Item::EnergyCell => "Fills the ability and speeds up recharge.",
-            Item::Bank => "Earns 15% of your crystals every sector.",
+            Item::Bank => "Earns 15% of your coins every sector.",
             Item::Radar => "Cards drop more often.",
             Item::Amulet => "A few more power-ups until the end of the run (max 2).",
-            Item::Crystallizer => "Enemies drop more crystals.",
+            Item::Purse => "Enemies drop more coins.",
             Item::TreasureMap => "A Golden Scarab in the next sector.",
             Item::Mercenary => "A wingman fires at your side for 2 sectors.",
             Item::MysteryCard => "A random card for your collection.",
@@ -707,7 +713,7 @@ impl Item {
             Item::Drone | Item::SideCannons => Icon::Drone,
             Item::Bank => Icon::Bag,
             Item::Radar | Item::MysteryCard => Icon::Card,
-            Item::Crystallizer | Item::TreasureMap => Icon::Crystal,
+            Item::Purse | Item::TreasureMap => Icon::Coin,
             Item::Autofire | Item::Capacitor => Icon::Bolt,
             Item::LaserSight => Icon::Target,
             Item::MysteryBox => Icon::Bag,
@@ -716,31 +722,32 @@ impl Item {
     }
     fn price(self) -> u32 {
         match self {
-            Item::ExtraLife => 95,
-            Item::Bomb => 25,
-            Item::Shield => 40,
-            Item::Upgrade => 50,
-            Item::Weapon(w) => [40, 80, 130, 190, 260][(w.tier() - 1) as usize],
-            Item::Thruster => 35,
-            Item::Trigger => 45,
-            Item::Magnet => 25,
-            Item::Drone => 80,
-            Item::SideCannons => 60,
-            Item::Insurance => 30,
-            Item::EnergyCell => 40,
-            Item::Bank => 60,
-            Item::Radar => 70,
-            Item::Amulet => 50,
-            Item::Crystallizer => 55,
-            Item::TreasureMap => 45,
-            Item::Mercenary => 75,
-            Item::MysteryCard => 90,
-            Item::Autofire => 75,
-            Item::LaserSight => 25,
-            Item::Capacitor => 50,
-            Item::MysteryBox => 20,
-            Item::DamageCore => 70,
-            Item::Evolve(w) => 170 + 40 * w.tier(),
+            // Prices in coins. Coins are rare, so every purchase is a real choice.
+            Item::ExtraLife => 1500,
+            Item::Bomb => 300,
+            Item::Shield => 600,
+            Item::Upgrade => 700,
+            Item::Weapon(w) => [500, 1200, 2200, 3600, 5500][(w.tier() - 1) as usize],
+            Item::Thruster => 400,
+            Item::Trigger => 250,
+            Item::Magnet => 250,
+            Item::Drone => 1200,
+            Item::SideCannons => 900,
+            Item::Insurance => 400,
+            Item::EnergyCell => 500,
+            Item::Bank => 900,
+            Item::Radar => 900,
+            Item::Amulet => 700,
+            Item::Purse => 700,
+            Item::TreasureMap => 600,
+            Item::Mercenary => 1100,
+            Item::MysteryCard => 1200,
+            Item::Autofire => 1500,
+            Item::LaserSight => 250,
+            Item::Capacitor => 700,
+            Item::MysteryBox => 300,
+            Item::DamageCore => 1000,
+            Item::Evolve(w) => 2500 + 600 * w.tier(),
         }
     }
     /// Unique key (different weapons count separately).
@@ -761,7 +768,7 @@ impl Item {
             Item::Bank => 12,
             Item::Radar => 13,
             Item::Amulet => 14,
-            Item::Crystallizer => 15,
+            Item::Purse => 15,
             Item::TreasureMap => 16,
             Item::Mercenary => 17,
             Item::MysteryCard => 18,
@@ -830,7 +837,7 @@ pub struct Game {
     pub fx: Fx,
     pub bg: Background,
     pub score: u32,
-    pub crystals: f32,
+    pub coins: f32,
     pub wave: u32,
     pub cycle: u32,
     pub combo: u32,
@@ -867,7 +874,7 @@ pub struct Game {
     side_cannons: bool,
     insurance: bool,
     bank: bool,
-    crystalizer: bool,
+    purse: bool,
     treasure_map: bool,
     ally_sectors: u32,
     grudge: bool,
@@ -907,7 +914,7 @@ pub struct Game {
     pub bosses_killed: u32,
     pub sectors_cleared: u32,
     pub grazes: u32,
-    crystal_bomb_acc: f32,
+    coin_bomb_acc: f32,
     pub continues_used: u32,
     continues_left: u32,
     pub new_cards: Vec<usize>,
@@ -941,9 +948,9 @@ impl Game {
         let mut mods = Mods::from_cards(&equipped);
         let ship: &ShipDef = &SHIPS[cfg.ship];
         if cfg.ship == 8 {
-            mods.crystal_mul *= 1.2;
+            mods.coin_mul *= 1.2;
         }
-        let mut lives = 3 + mods.extra_lives + ship.lives + cfg.diff.lives();
+        let mut lives = (3 + mods.extra_lives + ship.lives + cfg.diff.lives()).min(MAX_LIVES);
         let mut weapon = Weapon::Blaster;
         let mut level = mods.start_level;
         if mods.second_laser {
@@ -986,7 +993,7 @@ impl Game {
         let mut bg = Background::new();
         bg.set_theme(0);
         let pos = player.pos;
-        let crystals = mods.start_crystals as f32;
+        let coins = mods.start_coins as f32;
         let fog = if cfg.daily == Some(Daily::Fog) {
             Some(make_fog())
         } else {
@@ -1017,7 +1024,7 @@ impl Game {
             fx: Fx::default(),
             bg,
             score: 0,
-            crystals,
+            coins,
             wave: 1,
             cycle: 0,
             combo: 0,
@@ -1052,7 +1059,7 @@ impl Game {
             side_cannons: false,
             insurance: false,
             bank: false,
-            crystalizer: false,
+            purse: false,
             treasure_map: false,
             ally_sectors: 0,
             grudge: false,
@@ -1089,7 +1096,7 @@ impl Game {
             bosses_killed: 0,
             sectors_cleared: 0,
             grazes: 0,
-            crystal_bomb_acc: 0.0,
+            coin_bomb_acc: 0.0,
             continues_used: 0,
             continues_left: continues,
             new_cards: vec![],
@@ -1120,11 +1127,11 @@ impl Game {
         g
     }
 
-    /// Starts a campaign at a later checkpoint. The ship gets the crystals and the weapon
+    /// Starts a campaign at a later checkpoint. The ship gets the coins and the weapon
     /// power a pilot would have gathered on the way, so the jump is fair but not free.
     pub fn start_at_checkpoint(&mut self, sector: u32) {
         self.wave = (sector - 1) * SUBS + 1;
-        self.crystals += 45.0 * (sector - 1) as f32;
+        self.coins += 300.0 * (sector - 1) as f32;
         let lv = (1 + sector as i32 / 5).min(4);
         self.player.level = lv;
         if let Some(p2) = &mut self.p2 {

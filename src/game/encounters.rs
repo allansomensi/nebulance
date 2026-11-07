@@ -43,10 +43,10 @@ impl SEvent {
         match self {
             SEvent::Eclipse => "The light fades. You can only see near your ship.",
             SEvent::Meteors => "Rocks rain down all over the sector.",
-            SEvent::GoldRush => "Crystals are worth double this sector.",
+            SEvent::GoldRush => "Coins are worth double this sector.",
             SEvent::Ambush => "Part of the Swarm comes from below!",
             SEvent::Gravity => "Enemy shots curve toward you.",
-            SEvent::Convoy => "Freighters full of crystals cross the screen.",
+            SEvent::Convoy => "Freighters full of coins cross the screen.",
         }
     }
     pub fn index(self) -> usize {
@@ -64,7 +64,7 @@ pub enum CKind {
     Combo,
     Grazes,
     Capsules,
-    Crystals,
+    Coins,
     Dives,
     Parts,
     NoBomb,
@@ -92,7 +92,7 @@ impl Contract {
             CKind::Combo => format!("Make a {} combo", self.target),
             CKind::Grazes => format!("Make {} grazes", self.target),
             CKind::Capsules => format!("Grab {} capsules", self.target),
-            CKind::Crystals => format!("Collect {} crystals", self.target),
+            CKind::Coins => format!("Collect {} coins", self.target),
             CKind::Dives => format!("Shoot down {} while diving", self.target),
             CKind::Parts => format!("Destroy {} boss parts", self.target),
             CKind::NoBomb => "Finish a sector without bombs".to_string(),
@@ -117,7 +117,7 @@ fn roll_contracts(mode: Mode, rank: usize, achs: &[bool]) -> Vec<Contract> {
         pool.extend([
             (CKind::Grazes, 60, 350),
             (CKind::Capsules, 6, 300),
-            (CKind::Crystals, 150, 300),
+            (CKind::Coins, 150, 300),
             (CKind::Fever, 1, 500),
         ]);
         if matches!(
@@ -140,7 +140,7 @@ fn roll_contracts(mode: Mode, rank: usize, achs: &[bool]) -> Vec<Contract> {
                 CKind::Parts
                     | CKind::Grazes
                     | CKind::Capsules
-                    | CKind::Crystals
+                    | CKind::Coins
                     | CKind::Fever
                     | CKind::NoBomb
             )
@@ -183,7 +183,7 @@ pub struct Encounters {
     event_timer: f32,
     pub events_seen: Vec<usize>,
     pub capsules: u32,
-    pub crystals: u32,
+    pub coins: u32,
     pub parts: u32,
     pub dives: u32,
     pub elites: u32,
@@ -549,7 +549,7 @@ impl Game {
         self.banner = Some((LOGS[i].0.to_string(), LOGS[i].1.to_string(), 4.5));
     }
 
-    pub(super) fn event_crystal_mul(&self) -> f32 {
+    pub(super) fn event_coin_mul(&self) -> f32 {
         if self.enc.event == Some(SEvent::GoldRush) {
             2.0
         } else {
@@ -649,14 +649,14 @@ impl Game {
             self.enc.dives += 1;
         }
         if self.enc.fever_t > 0.0 && !e.bonus {
-            self.spawn_drop(e.pos, DropKind::Crystal(1));
+            self.spawn_drop(e.pos, DropKind::Coin(1));
         }
         if e.elite {
             self.enc.elites += 1;
             self.events.push(Event::Elite);
             self.add_score(e.kind.points() * 2);
             for _ in 0..3 {
-                self.spawn_drop(e.pos, DropKind::Crystal(1));
+                self.spawn_drop(e.pos, DropKind::Coin(1));
             }
             if self.mods.elite_drop {
                 let cap = self.make_capsule();
@@ -673,7 +673,7 @@ impl Game {
                 let cap = self.make_capsule();
                 self.spawn_drop(e.pos, cap);
                 for _ in 0..2 {
-                    self.spawn_drop(e.pos, DropKind::Crystal(5));
+                    self.spawn_drop(e.pos, DropKind::Coin(5));
                 }
             }
             Kind::Thief => {
@@ -693,13 +693,13 @@ impl Game {
                     }
                 }
                 for _ in 0..3 {
-                    self.spawn_drop(e.pos, DropKind::Crystal(5));
+                    self.spawn_drop(e.pos, DropKind::Coin(5));
                 }
             }
             Kind::Freighter => {
                 au.play(Sfx::Buy);
                 for _ in 0..6 {
-                    self.spawn_drop(e.pos, DropKind::Crystal(5));
+                    self.spawn_drop(e.pos, DropKind::Coin(5));
                 }
             }
             Kind::Cow => {
@@ -961,7 +961,7 @@ impl Game {
         }
         if self.mods.hole_magnet {
             for d in &mut self.drops {
-                if let DropKind::Crystal(_) = d.kind {
+                if let DropKind::Coin(_) = d.kind {
                     for (p, r) in &holes {
                         if d.pos.distance(*p) < r * 2.0 {
                             d.pos += (*p - d.pos).normalize_or_zero() * 200.0 * dt;
@@ -1206,7 +1206,7 @@ impl Game {
             au.play(Sfx::Fever);
             self.banner = Some((
                 "FEVER!".into(),
-                "Double points and crystals on every kill!".into(),
+                "Double points and coins on every kill!".into(),
                 2.0,
             ));
             self.ach(ach::FEVER);
@@ -1228,7 +1228,7 @@ impl Game {
                 CKind::Combo => c.progress = c.progress.max(combo),
                 CKind::Grazes => c.progress = grazes,
                 CKind::Capsules => c.progress = self.enc.capsules,
-                CKind::Crystals => c.progress = self.enc.crystals,
+                CKind::Coins => c.progress = self.enc.coins,
                 CKind::Dives => c.progress = self.enc.dives,
                 CKind::Parts => c.progress = self.enc.parts,
                 CKind::Elites => c.progress = self.enc.elites,
@@ -1246,12 +1246,12 @@ impl Game {
             let c = &self.enc.contracts[i];
             self.enc.contract_xp += c.xp * mul;
             self.enc.contracts_done += 1;
-            self.crystals += 25.0 * mul as f32;
+            self.coins += 150.0 * mul as f32;
             let text = c.text();
             au.play(Sfx::Contract);
             self.banner = Some((
                 "CONTRACT COMPLETE".into(),
-                format!("{text}  ·  +{} XP  +{} crystals", c.xp * mul, 25 * mul),
+                format!("{text}  ·  +{} XP  +{} coins", c.xp * mul, 150 * mul),
                 3.0,
             ));
             self.events.push(Event::Contract);
@@ -1267,7 +1267,7 @@ impl Game {
         self.enc.calf += (target - self.enc.calf) * (dt * 4.0).min(1.0);
         let calf = self.enc.calf;
         for d in &mut self.drops {
-            if matches!(d.kind, DropKind::Crystal(_)) && d.pos.distance(calf) < 70.0 {
+            if matches!(d.kind, DropKind::Coin(_)) && d.pos.distance(calf) < 70.0 {
                 d.pos = d.pos.lerp(pp, (dt * 6.0).min(1.0));
             }
         }

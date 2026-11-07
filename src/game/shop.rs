@@ -3,8 +3,21 @@
 use super::*;
 
 impl Game {
+    /// Development helper: open the shop with some coins.
+    pub fn debug_shop(&mut self) {
+        self.coins = 3000.0;
+        self.shop_sel = 0;
+        self.roll_offers();
+        self.phase = Phase::Shop;
+    }
+
+    /// The whole catalogue: everything the shop sells, from the cheapest to the most
+    /// expensive. The strongest weapons are only found here.
     pub(super) fn roll_offers(&mut self) {
-        let mut pool: Vec<Item> = vec![
+        let mut items: Vec<Item> = vec![
+            Item::ExtraLife,
+            Item::Bomb,
+            Item::Shield,
             Item::Upgrade,
             Item::Thruster,
             Item::Trigger,
@@ -12,65 +25,31 @@ impl Game {
             Item::Insurance,
             Item::EnergyCell,
             Item::Amulet,
-            Item::Crystallizer,
+            Item::Purse,
             Item::MysteryCard,
             Item::SideCannons,
             Item::LaserSight,
             Item::Capacitor,
             Item::MysteryBox,
-            Item::MysteryBox,
+            Item::Autofire,
+            Item::DamageCore,
         ];
         if self.cfg.rank >= 5 {
-            pool.push(Item::Drone);
+            items.push(Item::Drone);
         }
         if self.cfg.rank >= 11 {
-            pool.extend([Item::Bank, Item::Radar, Item::TreasureMap, Item::Mercenary]);
+            items.extend([Item::Bank, Item::Radar, Item::TreasureMap, Item::Mercenary]);
+        }
+        if self.can_evolve() {
+            items.push(Item::Evolve(self.player.weapon));
         }
         for w in self.weapon_pool() {
-            if w != self.player.weapon {
-                pool.push(Item::Weapon(w));
+            if w != self.player.weapon && !w.is_relic() {
+                items.push(Item::Weapon(w));
             }
         }
-        pool.retain(|i| self.shop_block(*i).is_none());
-        // Always two weapons for sale, preferably stronger than the current one.
-        let cur = self.player.weapon.tier();
-        let mut weapons: Vec<Item> = pool
-            .iter()
-            .copied()
-            .filter(|i| matches!(i, Item::Weapon(w) if w.tier() >= cur))
-            .collect();
-        if weapons.len() < 2 {
-            weapons = pool
-                .iter()
-                .copied()
-                .filter(|i| matches!(i, Item::Weapon(_)))
-                .collect();
-        }
-        let mut offers: Vec<Item> = vec![];
-        while offers.len() < 2 && !weapons.is_empty() {
-            offers.push(weapons.swap_remove(gen_range(0, weapons.len())));
-        }
-        pool.retain(|i| !matches!(i, Item::Weapon(_)));
-        while offers.len() < 4 && !pool.is_empty() {
-            let it = pool.swap_remove(gen_range(0, pool.len()));
-            offers.push(it);
-        }
-        offers.sort_by_key(|i| match i {
-            Item::Weapon(w) => w.tier() as i32,
-            _ => 10,
-        });
-        self.shop_offers = vec![Item::ExtraLife, Item::Bomb, Item::Shield];
-        if !self.arcade.autofire {
-            self.shop_offers.push(Item::Autofire);
-        }
-        if self.arcade.core < 6 {
-            self.shop_offers.push(Item::DamageCore);
-        }
-        // The long-term goal of a run: evolving a level 5 weapon.
-        if self.can_evolve() {
-            self.shop_offers.push(Item::Evolve(self.player.weapon));
-        }
-        self.shop_offers.extend(offers);
+        items.sort_by_key(|it| (self.price(*it), it.key()));
+        self.shop_offers = items;
     }
 
     pub(super) fn bought(&self, it: Item) -> u32 {
@@ -86,35 +65,27 @@ impl Game {
         if self.grudge {
             p *= 1.3;
         }
-        if self.cfg.daily == Some(Daily::DoubleCrystals) {
+        if self.cfg.daily == Some(Daily::DoubleCoins) {
             p *= 1.5;
         }
         p.round() as u32
     }
 
-    pub(super) fn reroll_price(&self) -> u32 {
-        if self.mods.free_reroll && !self.free_reroll_used {
-            0
-        } else {
-            15 + 10 * self.rerolls
-        }
-    }
-
     pub(super) fn shop_block(&self, it: Item) -> Option<&'static str> {
         let p = &self.player;
         match it {
-            Item::ExtraLife if p.lives >= 5 => Some("MAX"),
+            Item::ExtraLife if p.lives >= MAX_LIVES => Some("MAX"),
             Item::Bomb if p.bombs >= 5 => Some("MAX"),
             Item::Upgrade if p.level >= 5 => Some("MAX"),
             Item::Shield if p.shield => Some("OWNED"),
             Item::Thruster if p.speed_lvl >= 3 => Some("MAX"),
-            Item::Trigger if p.fire_lvl >= 3 => Some("MAX"),
+            Item::Trigger if p.fire_lvl >= MAX_FIRE_LVL => Some("MAX"),
             Item::Magnet if p.magnet_lvl >= 3 || self.mods.magnet_all => Some("MAX"),
             Item::Drone if self.drones_total() >= 3 => Some("MAX"),
             Item::SideCannons if self.side_cannons => Some("OWNED"),
             Item::Insurance if self.insurance || self.mods.keep_level => Some("OWNED"),
             Item::Bank if self.bank => Some("OWNED"),
-            Item::Crystallizer if self.crystalizer => Some("OWNED"),
+            Item::Purse if self.purse => Some("OWNED"),
             Item::Amulet if self.bought(Item::Amulet) >= 2 => Some("MAX"),
             Item::Radar if self.bought(Item::Radar) >= 1 => Some("OWNED"),
             Item::TreasureMap if self.treasure_map => Some("OWNED"),
@@ -131,7 +102,8 @@ impl Game {
     }
 
     pub(super) fn update_shop(&mut self, inp: &Input, au: &mut Audio) -> Phase {
-        let n = self.shop_offers.len() + 2;
+        // the catalogue plus the DEPART row
+        let n = self.shop_offers.len() + 1;
         if let Some(h) = inp.hover
             && h < n
             && h != self.shop_sel
@@ -159,28 +131,12 @@ impl Game {
                 au.play(Sfx::MenuOk);
                 return self.leave_shop();
             }
-            if i == n - 2 {
-                let price = self.reroll_price();
-                if (self.crystals.floor() as u32) < price {
-                    au.play(Sfx::Deny);
-                } else {
-                    if price == 0 {
-                        self.free_reroll_used = true;
-                    } else {
-                        self.rerolls += 1;
-                    }
-                    self.crystals -= price as f32;
-                    self.roll_offers();
-                    au.play(Sfx::Portal);
-                }
-                return Phase::Shop;
-            }
             let it = self.shop_offers[i];
             let price = self.price(it);
-            if self.shop_block(it).is_some() || (self.crystals.floor() as u32) < price {
+            if self.shop_block(it).is_some() || (self.coins.floor() as u32) < price {
                 au.play(Sfx::Deny);
             } else {
-                self.crystals -= price as f32;
+                self.coins -= price as f32;
                 let key = it.key();
                 match self.shop_buys.iter_mut().find(|(k, _)| *k == key) {
                     Some((_, n)) => *n += 1,
@@ -207,7 +163,7 @@ impl Game {
                     Item::Bank => self.bank = true,
                     Item::Radar => self.mods.card_mul += 0.6,
                     Item::Amulet => self.mods.powerup_mul += 0.3,
-                    Item::Crystallizer => self.crystalizer = true,
+                    Item::Purse => self.purse = true,
                     Item::TreasureMap => self.treasure_map = true,
                     Item::Mercenary => self.ally_sectors = 2,
                     Item::MysteryCard => {
@@ -223,6 +179,14 @@ impl Game {
                 }
                 self.mirror_purchase(it);
                 self.check_mastery();
+                // prices and availability changed: rebuild the list, keep the cursor on the item
+                let key = it.key();
+                self.roll_offers();
+                self.shop_sel = self
+                    .shop_offers
+                    .iter()
+                    .position(|o| o.key() == key)
+                    .unwrap_or(self.shop_sel.min(self.shop_offers.len()));
             }
         }
         Phase::Shop
@@ -255,7 +219,7 @@ impl Game {
         let sub = if self.grudge {
             "The Merchant glares at you: prices +30%"
         } else {
-            "Spend your crystals before the next sector"
+            "Spend your coins before the next sector"
         };
         ui::text_c(
             sub,
@@ -264,15 +228,9 @@ impl Game {
             14.0,
             if self.grudge { RED } else { DIM },
         );
-        sp.crystal[((self.time * 4.0) as usize) % 2].draw(
-            vec2(W / 2.0 - 40.0, 108.0),
-            3.0,
-            0.0,
-            WHITE,
-            false,
-        );
+        coins::draw_coin(vec2(W / 2.0 - 40.0, 108.0), 100, self.time, 1.4);
         ui::text(
-            &format!("{}", self.crystals.floor() as u32),
+            &format!("{}", self.coins.floor() as u32),
             W / 2.0 - 24.0,
             116.0,
             26.0,
@@ -281,12 +239,20 @@ impl Game {
 
         let y0 = 134.0;
         let row_h = 46.0;
-        for (i, it) in self.shop_offers.iter().enumerate() {
-            let y = y0 + i as f32 * row_h;
+        let n = self.shop_offers.len();
+        let visible = 10usize;
+        // keep the selection in view
+        let first = self
+            .shop_sel
+            .saturating_sub(visible / 2)
+            .min(n.saturating_sub(visible));
+        for (row, i) in (first..(first + visible).min(n)).enumerate() {
+            let it = &self.shop_offers[i];
+            let y = y0 + row as f32 * row_h;
             let sel = self.shop_sel == i;
             let blocked = self.shop_block(*it);
             let price = self.price(*it);
-            let afford = self.crystals.floor() as u32 >= price;
+            let afford = self.coins.floor() as u32 >= price;
             let bg = if sel {
                 Color::new(0.3, 0.25, 0.05, 0.6)
             } else {
@@ -299,16 +265,6 @@ impl Game {
             );
             if sel {
                 draw_rectangle_lines(20.0, y, W - 40.0, row_h - 5.0, 2.0, GOLD);
-            }
-            if i == 3 {
-                draw_line(
-                    24.0,
-                    y - 3.0,
-                    W - 24.0,
-                    y - 3.0,
-                    1.0,
-                    Color::new(1.0, 1.0, 1.0, 0.15),
-                );
             }
             match it {
                 Item::Weapon(w) => crate::icons::weapon_badge(*w, vec2(44.0, y + 20.0), 14.0, 1.0),
@@ -330,32 +286,30 @@ impl Game {
                 ),
             }
         }
-        let n = self.shop_offers.len();
-        let y = y0 + n as f32 * row_h + 8.0;
-        let rp = self.reroll_price();
-        let label = if rp == 0 {
-            "REROLL OFFERS (FREE)".to_string()
-        } else {
-            format!("REROLL OFFERS ({rp})")
-        };
-        let c = if self.shop_sel == n { GOLD } else { DIM };
-        ui::text_c(&label, W / 2.0, y + 14.0, 18.0, c);
-        ui::hot(
-            Rect::new(60.0, y - 6.0, W - 120.0, 28.0),
-            ui::Hot::Select(n),
-        );
-        ui::hot(
-            Rect::new(40.0, y + 26.0, W - 80.0, 32.0),
-            ui::Hot::Select(n + 1),
-        );
+        // scroll marks
+        let arrow = Color::new(1.0, 0.85, 0.4, 0.5 + (self.time * 4.0).sin().abs() * 0.5);
+        if first > 0 {
+            ui::text_c("^ MORE ^", W / 2.0, y0 - 2.0, 11.0, arrow);
+        }
+        if first + visible < n {
+            ui::text_c(
+                "v MORE v",
+                W / 2.0,
+                y0 + visible as f32 * row_h + 4.0,
+                11.0,
+                arrow,
+            );
+        }
+        let y = y0 + visible as f32 * row_h + 22.0;
+        ui::hot(Rect::new(40.0, y - 6.0, W - 80.0, 34.0), ui::Hot::Select(n));
         let next = match self.cfg.mode {
             Mode::BossRush => format!("FACE THE BOSS {}", self.wave + 1),
             _ => format!("DEPART FOR SECTOR {}", self.absolute_sector() + 1),
         };
-        if self.shop_sel == n + 1 {
-            ui::text_c(&format!("> {next} <"), W / 2.0, y + 48.0, 22.0, GOLD);
+        if self.shop_sel == n {
+            ui::text_c(&format!("> {next} <"), W / 2.0, y + 18.0, 22.0, GOLD);
         } else {
-            ui::text_c(&next, W / 2.0, y + 48.0, 20.0, DIM);
+            ui::text_c(&next, W / 2.0, y + 18.0, 20.0, DIM);
         }
         let p = &self.player;
         let status = format!(

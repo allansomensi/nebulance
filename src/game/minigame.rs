@@ -10,7 +10,7 @@ use std::f32::consts::TAU;
 
 #[derive(Clone, Copy, PartialEq, Eq, Debug)]
 pub enum MgKind {
-    CrystalRain,
+    CoinRain,
     Vault,
     Sequence,
     Targets,
@@ -18,7 +18,7 @@ pub enum MgKind {
 }
 
 pub const MG_KINDS: [MgKind; 5] = [
-    MgKind::CrystalRain,
+    MgKind::CoinRain,
     MgKind::Vault,
     MgKind::Sequence,
     MgKind::Targets,
@@ -28,7 +28,7 @@ pub const MG_KINDS: [MgKind; 5] = [
 impl MgKind {
     pub fn name(self) -> &'static str {
         match self {
-            MgKind::CrystalRain => "CRYSTAL RAIN",
+            MgKind::CoinRain => "COIN RAIN",
             MgKind::Vault => "STAR VAULT",
             MgKind::Sequence => "STAR SEQUENCE",
             MgKind::Targets => "TARGET PRACTICE",
@@ -37,7 +37,7 @@ impl MgKind {
     }
     fn how(self) -> [&'static str; 2] {
         match self {
-            MgKind::CrystalRain => ["Catch the falling crystals.", "Dodge the rocks!"],
+            MgKind::CoinRain => ["Catch the falling coins.", "Dodge the rocks!"],
             MgKind::Vault => [
                 "Press {FIRE} when the needle",
                 "is on the golden band. 3 locks.",
@@ -55,7 +55,7 @@ impl MgKind {
     }
     fn color(self) -> Color {
         match self {
-            MgKind::CrystalRain => CYAN,
+            MgKind::CoinRain => CYAN,
             MgKind::Vault => GOLD,
             MgKind::Sequence => PINK,
             MgKind::Targets => GREEN,
@@ -193,7 +193,7 @@ impl Minigame {
 
     fn duration(&self) -> f32 {
         match self.kind {
-            MgKind::CrystalRain => 10.0,
+            MgKind::CoinRain => 10.0,
             MgKind::Targets => 10.0,
             MgKind::Asteroids => 12.0,
             _ => 30.0,
@@ -202,7 +202,7 @@ impl Minigame {
 
     fn finish(&mut self) {
         self.grade = match self.kind {
-            MgKind::CrystalRain => {
+            MgKind::CoinRain => {
                 if self.score >= 22 && self.hits == 0 {
                     Grade::Perfect
                 } else if self.score >= 12 {
@@ -291,7 +291,7 @@ impl Minigame {
         self.play_t += dt;
         let fire = inp.confirm || (inp.fire && self.shot_cd <= 0.0 && self.kind == MgKind::Targets);
         match self.kind {
-            MgKind::CrystalRain => {
+            MgKind::CoinRain => {
                 self.move_ship(dt, inp, false);
                 self.spawn_t -= dt;
                 if self.spawn_t <= 0.0 {
@@ -316,7 +316,7 @@ impl Minigame {
                             au.play(Sfx::Clang);
                         } else {
                             self.score += 1;
-                            au.play_vol(Sfx::Crystal, 0.5);
+                            au.play_vol(Sfx::Coin, 0.5);
                         }
                     }
                 }
@@ -544,8 +544,8 @@ impl Minigame {
                     W - 30.0,
                 );
                 let sub = match self.grade {
-                    Grade::Defeat => "A consolation prize: 5 crystals.",
-                    Grade::Victory => "Reward: crystals, a weapon level and a power-up.",
+                    Grade::Defeat => "A consolation prize: a few coins.",
+                    Grade::Victory => "Reward: coins, a weapon level and a power-up.",
                     Grade::Perfect => "Double reward and a card!",
                 };
                 ui::text_c(sub, W / 2.0, H / 2.0 + 40.0, 15.0, WHITE);
@@ -557,14 +557,14 @@ impl Minigame {
         // timer
         if matches!(
             self.kind,
-            MgKind::CrystalRain | MgKind::Targets | MgKind::Asteroids
+            MgKind::CoinRain | MgKind::Targets | MgKind::Asteroids
         ) {
             let left = (self.duration() - self.play_t).max(0.0) / self.duration();
             draw_rectangle(30.0, 80.0, W - 60.0, 6.0, Color::new(0.2, 0.2, 0.3, 1.0));
             draw_rectangle(30.0, 80.0, (W - 60.0) * left, 6.0, c);
         }
         match self.kind {
-            MgKind::CrystalRain => {
+            MgKind::CoinRain => {
                 for o in &self.objs {
                     if o.kind == 1 {
                         draw_poly(
@@ -591,7 +591,7 @@ impl Minigame {
                 }
                 self.draw_ship(time, ship);
                 ui::text_c(
-                    &format!("CRYSTALS: {}", self.score),
+                    &format!("COINS: {}", self.score),
                     W / 2.0,
                     120.0,
                     22.0,

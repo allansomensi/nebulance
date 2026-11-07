@@ -138,7 +138,7 @@ pub enum Icon {
     Magnet,
     Engine,
     Bolt,
-    Crystal,
+    Coin,
     Shield,
     Star,
     Disc,
@@ -159,8 +159,6 @@ pub struct Sprites {
     pub turret: Spr,
     pub cannon: Spr,
     pub asteroid: [Spr; 2],
-    pub crystal: [Spr; 2],
-    pub crystal_big: [Spr; 2],
     pub card: Spr,
     pub drone: Spr,
     icons: Vec<(Icon, Spr)>,
@@ -381,13 +379,10 @@ pub fn build() -> Sprites {
     let kami = pair(kamikaze(0), kamikaze(1));
     let mini = pair(mini(0), mini(1));
 
-    let crystal_a = plain(&[
-        "..k..", ".kck.", "kcwck", "kccCk", "kcCCk", ".kCk.", "..k..",
+    // a gold coin (icons)
+    let coin_a = plain(&[
+        "..kkk..", ".kyyyk.", "kyywyYk", "kywyyYk", "kyyyYYk", ".kYYYk.", "..kkk..",
     ]);
-    let crystal_b = plain(&[
-        "..k..", ".kck.", "kccck", "kcwCk", "kcCCk", ".kCk.", "..k..",
-    ]);
-    let big_c = [('c', 'w'), ('C', 'c')];
 
     let icons = vec![
         (
@@ -457,7 +452,7 @@ pub fn build() -> Sprites {
                 "..kk.....",
             ])),
         ),
-        (Icon::Crystal, s(crystal_a.clone())),
+        (Icon::Coin, s(coin_a.clone())),
         (
             Icon::Shield,
             s(plain(&[
@@ -610,11 +605,6 @@ pub fn build() -> Sprites {
                 ".knnsnnk.",
                 "..kkkkk..",
             ])),
-        ],
-        crystal: [s(crystal_a.clone()), s(crystal_b.clone())],
-        crystal_big: [
-            s(recolor(&crystal_a, &big_c)),
-            s(recolor(&crystal_b, &big_c)),
         ],
         card: s(plain(&[
             "kkkkkkk", "kyyyyyk", "kyoooyk", "kyowoyk", "kyoooyk", "kyyyyyk", "kyYyYyk", "kyyyyyk",
