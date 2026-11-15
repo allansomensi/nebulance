@@ -1,0 +1,26 @@
+# Builds the Microsoft Store package (MSIX) on Windows.
+# Runs by hand (Actions > MSIX package > Run workflow) or when a tag like v1.0.0 is pushed.
+# The .msix is attached to the run as an artifact, ready to upload to Partner Center.
+name: MSIX package
+
+on:
+  workflow_dispatch:
+  push:
+    tags: ["v*"]
+
+jobs:
+  msix:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Rust toolchain
+        run: rustup toolchain install stable --profile minimal && rustup default stable
+      - uses: Swatinem/rust-cache@v2
+      - name: Build MSIX
+        shell: pwsh
+        run: ./packaging/build-msix.ps1
+      - uses: actions/upload-artifact@v4
+        with:
+          name: nebulance-msix
+          path: dist/*.msix
+          if-no-files-found: error

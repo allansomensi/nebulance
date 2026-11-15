@@ -214,7 +214,37 @@ pub fn system_lang() -> u8 {
     if loc.starts_with("pt") { 1 } else { 0 }
 }
 
+/// Package family name when the game runs from the Microsoft Store (MSIX) package.
+#[cfg(target_os = "windows")]
+fn package_family_name() -> Option<String> {
+    use windows_sys::Win32::Storage::Packaging::Appx::GetCurrentPackageFamilyName;
+    let mut len: u32 = 0;
+    // SAFETY: with a null buffer the call only writes the needed length.
+    unsafe { GetCurrentPackageFamilyName(&mut len, std::ptr::null_mut()) };
+    if len == 0 {
+        return None; // not packaged
+    }
+    let mut buf = vec![0u16; len as usize];
+    // SAFETY: `buf` holds `len` UTF-16 units, as the first call asked for.
+    let rc = unsafe { GetCurrentPackageFamilyName(&mut len, buf.as_mut_ptr()) };
+    if rc != 0 {
+        return None;
+    }
+    let end = buf.iter().position(|&c| c == 0).unwrap_or(buf.len());
+    Some(String::from_utf16_lossy(&buf[..end]))
+}
+
 pub fn data_dir() -> PathBuf {
+    // Microsoft Store build: the package's own LocalState folder. Writing to %APPDATA% from a
+    // package works, but Windows silently redirects it, so the path shown in Settings (and the
+    // "music" folder players create) would not be where the files really are.
+    #[cfg(target_os = "windows")]
+    if let (Some(pfn), Ok(l)) = (package_family_name(), std::env::var("LOCALAPPDATA")) {
+        return PathBuf::from(l)
+            .join("Packages")
+            .join(pfn)
+            .join("LocalState");
+    }
     #[cfg(target_os = "windows")]
     if let Ok(a) = std::env::var("APPDATA") {
         return PathBuf::from(a).join("Nebulance");

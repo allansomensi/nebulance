@@ -622,7 +622,7 @@ pub fn window_icon_rgba(size: usize) -> Vec<u8> {
     let (w, h, src) = rasterize(&player_rows());
     let (w, h) = (w as usize, h as usize);
     let mut out = vec![0u8; size * size * 4];
-    let bg = [24u8, 18, 48, 255];
+    let bg = ICON_BG;
     let scale = (size as f32 * 0.8) / (w.max(h) as f32);
     let ox = (size as f32 - w as f32 * scale) / 2.0;
     let oy = (size as f32 - h as f32 * scale) / 2.0;
@@ -652,6 +652,45 @@ pub fn window_icon_rgba(size: usize) -> Vec<u8> {
     }
     out
 }
+
+/// The player ship centered on a `w`×`h` canvas, scaled by a whole number so the pixels stay
+/// crisp. `fill` is the fraction of the shorter side the ship may take; `bg` paints the whole
+/// canvas (None leaves it transparent). Used for the Microsoft Store tiles and logos.
+pub fn tile_rgba(w: usize, h: usize, fill: f32, bg: Option<[u8; 4]>) -> Vec<u8> {
+    let (sw, sh, src) = rasterize(&player_rows());
+    let (sw, sh) = (sw as usize, sh as usize);
+    let room = (w.min(h) as f32 * fill) as usize;
+    let scale = (room / sw.max(sh)).max(1);
+    let ox = (w as isize - (sw * scale) as isize) / 2;
+    let oy = (h as isize - (sh * scale) as isize) / 2;
+    let mut out = vec![0u8; w * h * 4];
+    if let Some(bg) = bg {
+        for px in out.chunks_mut(4) {
+            px.copy_from_slice(&bg);
+        }
+    }
+    for y in 0..h {
+        for x in 0..w {
+            let sx = (x as isize - ox).div_euclid(scale as isize);
+            let sy = (y as isize - oy).div_euclid(scale as isize);
+            if sx < 0 || sy < 0 || x < ox.max(0) as usize || y < oy.max(0) as usize {
+                continue;
+            }
+            let (sx, sy) = (sx as usize, sy as usize);
+            if sx < sw && sy < sh {
+                let j = (sy * sw + sx) * 4;
+                if src[j + 3] > 0 {
+                    let i = (y * w + x) * 4;
+                    out[i..i + 4].copy_from_slice(&src[j..j + 4]);
+                }
+            }
+        }
+    }
+    out
+}
+
+/// Background color of the icon and of the Store tiles.
+pub const ICON_BG: [u8; 4] = [24, 18, 48, 255];
 
 #[cfg(test)]
 mod tests {

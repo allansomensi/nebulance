@@ -4631,6 +4631,99 @@ impl Screens {
     }
 }
 
+/// Writes an image as PNG the right way up (`Image::export_png` flips it vertically).
+fn save_png(mut img: Image, path: &str) {
+    let row = img.width as usize * 4;
+    let flipped: Vec<u8> = img.bytes.chunks(row).rev().flatten().copied().collect();
+    img.bytes = flipped;
+    img.export_png(path);
+}
+
+/// Images the Microsoft Store (MSIX) package needs: (file name, width, height, how much of
+/// the tile the ship fills, dark background or transparent).
+fn store_assets() -> Vec<(String, usize, usize, f32, bool)> {
+    let mut v = Vec::new();
+    let mut add = |name: &str, w: usize, h: usize, fill: f32, plated: bool| {
+        v.push((name.to_string(), w, h, fill, plated));
+    };
+    for (scale, k) in [(100, 1.0), (125, 1.25), (150, 1.5), (200, 2.0), (400, 4.0)] {
+        let px = |n: f32| (n * k) as usize;
+        add(
+            &format!("Square44x44Logo.scale-{scale}"),
+            px(44.0),
+            px(44.0),
+            0.8,
+            true,
+        );
+        add(
+            &format!("Square150x150Logo.scale-{scale}"),
+            px(150.0),
+            px(150.0),
+            0.6,
+            true,
+        );
+        add(
+            &format!("Wide310x150Logo.scale-{scale}"),
+            px(310.0),
+            px(150.0),
+            0.7,
+            true,
+        );
+        add(
+            &format!("SmallTile.scale-{scale}"),
+            px(71.0),
+            px(71.0),
+            0.7,
+            true,
+        );
+        add(
+            &format!("LargeTile.scale-{scale}"),
+            px(310.0),
+            px(310.0),
+            0.6,
+            true,
+        );
+        add(
+            &format!("StoreLogo.scale-{scale}"),
+            px(50.0),
+            px(50.0),
+            0.8,
+            true,
+        );
+        add(
+            &format!("SplashScreen.scale-{scale}"),
+            px(620.0),
+            px(300.0),
+            0.6,
+            true,
+        );
+    }
+    for n in [16usize, 20, 24, 30, 32, 36, 40, 48, 60, 64, 72, 80, 96, 256] {
+        add(
+            &format!("Square44x44Logo.targetsize-{n}"),
+            n,
+            n,
+            0.95,
+            false,
+        );
+        add(
+            &format!("Square44x44Logo.altform-unplated_targetsize-{n}"),
+            n,
+            n,
+            0.95,
+            false,
+        );
+        add(
+            &format!("Square44x44Logo.altform-lightunplated_targetsize-{n}"),
+            n,
+            n,
+            0.95,
+            false,
+        );
+    }
+    v
+}
+
 #[macroquad::main(window_conf)]
 async fn main() {
     let args: Vec<String> = std::env::args().collect();
@@ -4642,8 +4735,29 @@ async fn main() {
                 width: n as u16,
                 height: n as u16,
             };
-            img.export_png(&format!("{dir}/icone_{n}.png"));
+            save_png(img, &format!("{dir}/icone_{n}.png"));
         }
+        return;
+    }
+    if let Some(i) = args.iter().position(|a| a == "--export-store-assets") {
+        let dir = args.get(i + 1).cloned().unwrap_or_else(|| ".".into());
+        let _ = std::fs::create_dir_all(&dir);
+        for (name, w, h, fill, plated) in store_assets() {
+            let bg = plated.then_some(sprites::ICON_BG);
+            let img = Image {
+                bytes: sprites::tile_rgba(w, h, fill, bg),
+                width: w as u16,
+                height: h as u16,
+            };
+            save_png(img, &format!("{dir}/{name}.png"));
+        }
+        let (w, h, bytes) = sprites::rasterize(&sprites::player_rows());
+        let img = Image {
+            bytes,
+            width: w,
+            height: h,
+        };
+        save_png(img, &format!("{dir}/ship.png"));
         return;
     }
     if args.iter().any(|a| a == "--export-music") {

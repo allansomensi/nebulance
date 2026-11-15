@@ -1,0 +1,6 @@
+{
+  "_comment": "Copy these three values from Partner Center > your app > Product management > Product identity. They are not secret.",
+  "IdentityName": "PREENCHA.Nebulance",
+  "Publisher": "CN=PREENCHA-COM-O-PUBLISHER-DO-PARTNER-CENTER",
+  "PublisherDisplayName": "Allan Somensi"
+}

@@ -78,6 +78,20 @@ The executable ends up in `target\release\nebulance.exe`, with icon and version 
 For the installer, open `installer/nebulance.iss` in [Inno Setup 6](https://jrsoftware.org/isinfo.php) and
 click *Compile*.
 
+### Microsoft Store (MSIX)
+
+On Windows, with the Windows SDK installed (`winget install Microsoft.WindowsSDK.10.0.26100`):
+
+```powershell
+powershell -ExecutionPolicy Bypass -File packaging\build-msix.ps1
+```
+
+The package is written to `dist\Nebulance_<version>_x64.msix`. Add `-TestSign` to sign it with a
+self-signed certificate and install it locally. The *MSIX package* GitHub workflow builds the same
+package in the cloud. The full step-by-step for publishing (in Portuguese) is in
+[`packaging/MICROSOFT_STORE.md`](packaging/MICROSOFT_STORE.md); the Store page texts, screenshots and
+art are in `packaging/store/`.
+
 Cross-compiling from Linux (requires `gcc-mingw-w64-x86-64`):
 
 ```bash
@@ -135,6 +149,7 @@ cargo build --release --target x86_64-pc-windows-gnu
 
 - `--export-music` writes the soundtrack to `exported_music/*.wav`.
 - `--export-icon <folder>` writes the icon as PNG (16 to 256 px).
+- `--export-store-assets <folder>` writes the MSIX tiles and logos (the ones in `packaging/msix/Assets`).
 
 ## Custom music
 

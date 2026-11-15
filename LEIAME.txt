@@ -116,6 +116,7 @@ Patente, cartas, conquistas, recordes e configurações ficam em:
   Windows:  %APPDATA%\Nebulance\save.txt
   Linux:    ~/.local/share/nebulance/save.txt
   macOS:    ~/Library/Application Support/Nebulance/save.txt
+  Versão da Microsoft Store: a pasta exata aparece no rodapé das CONFIGURAÇÕES.
 
 Para zerar tudo: CONFIGURAÇÕES > JOGO > APAGAR PROGRESSO.
 

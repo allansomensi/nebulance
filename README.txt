@@ -114,6 +114,7 @@ Rank, cards, achievements, high scores and settings are saved in:
   Windows:  %APPDATA%\Nebulance\save.txt
   Linux:    ~/.local/share/nebulance/save.txt
   macOS:    ~/Library/Application Support/Nebulance/save.txt
+  Microsoft Store version: the exact folder is shown at the bottom of SETTINGS.
 
 To reset everything: SETTINGS > GAME > ERASE PROGRESS.
 

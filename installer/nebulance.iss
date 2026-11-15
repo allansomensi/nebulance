@@ -48,6 +48,7 @@ Source: "..\README.txt"; DestDir: "{app}"; Flags: ignoreversion isreadme; Langua
 Source: "..\README.txt"; DestDir: "{app}"; Flags: ignoreversion; Languages: brazilianportuguese
 Source: "..\LEIAME.txt"; DestDir: "{app}"; Flags: ignoreversion isreadme; Languages: brazilianportuguese
 Source: "..\LEIAME.txt"; DestDir: "{app}"; Flags: ignoreversion; Languages: english
+Source: "..\assets\fonts\OFL-*.txt"; DestDir: "{app}\licenses"; Flags: ignoreversion
 
 [Icons]
 Name: "{group}\{#AppName}"; Filename: "{app}\nebulance.exe"; WorkingDir: "{app}"
