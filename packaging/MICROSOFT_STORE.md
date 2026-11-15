@@ -101,7 +101,7 @@ Em **Envios > Iniciar envio**:
 - Preço: gratuito ou pago. Se for pago, vale ativar uma avaliação gratuita.
 
 **Propriedades**
-- Categoria: **Jogos > Tiro** (secundária opcional: **Clássicos**).
+- Categoria: **Jogos**. Gêneros (até três): **Jogos de tiros**, **Clássicos** e **Ação e aventura**.
 - Requisitos de sistema: **Teclado** obrigatório; **Controle Xbox** recomendado.
 - Recursos do jogo: **Um jogador** e **Multijogador local / co-op local (2 jogadores)**.
 - Política de privacidade: a URL do passo 5.
