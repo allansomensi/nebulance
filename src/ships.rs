@@ -139,7 +139,7 @@ pub const SHIPS: &[ShipDef] = &[
     },
     ShipDef {
         name: "PROBE",
-        desc: "The ship of the Stardust mission. 50% bigger coin magnet.",
+        desc: "The ship of the Nebulance mission. 50% bigger coin magnet.",
         speed: 1.0,
         lives: 0,
         fire: 1.0,

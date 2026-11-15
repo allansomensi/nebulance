@@ -491,7 +491,7 @@ fn sfx_samples(s: Sfx) -> Vec<f32> {
 }
 
 fn sparkle() -> Vec<f32> {
-    // Stardust sparkle: a bright arpeggio that rises and spreads out.
+    // Nebulance sparkle: a bright arpeggio that rises and spreads out.
     let seq: [f32; 10] = [72.0, 76.0, 79.0, 84.0, 88.0, 91.0, 96.0, 91.0, 96.0, 100.0];
     let mut out = Vec::new();
     for (i, m) in seq.iter().enumerate() {

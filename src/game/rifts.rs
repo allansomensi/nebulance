@@ -1554,7 +1554,7 @@ impl Game {
 }
 
 // ---------------------------------------------------------------------------
-// Test hooks (STARDUST_* environment variables)
+// Test hooks (NEBULANCE_* environment variables)
 // ---------------------------------------------------------------------------
 
 impl Game {
@@ -1616,7 +1616,7 @@ impl Game {
                 age: 0.0,
             });
         }
-        self.arcade.letters = [true, false, true, true, false, false, false, true];
+        self.arcade.letters = [true, false, true, true, false, false, false, true, false];
         self.debug_ufo_soon();
     }
 

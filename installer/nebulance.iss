@@ -1,21 +1,21 @@
-; Stardust installer (Inno Setup 6 — https://jrsoftware.org/isinfo.php)
+; Nebulance installer (Inno Setup 6 — https://jrsoftware.org/isinfo.php)
 ;
 ; How to build:
 ;   1. On Windows, build the game:   cargo build --release
-;   2. Open this file in Inno Setup and click "Compile" (or run: iscc installer\stardust.iss)
-;   3. The installer is written to dist\Stardust-0.1.0-setup.exe
+;   2. Open this file in Inno Setup and click "Compile" (or run: iscc installer\nebulance.iss)
+;   3. The installer is written to dist\Nebulance-0.1.0-setup.exe
 ;
 ; If you built the game another way (e.g. cross-compiling), adjust ExePath below.
 
-#define AppName "Stardust"
+#define AppName "Nebulance"
 #define AppVersion "0.1.0"
 #define AppPublisher "Allan Somensi"
 #ifndef ExePath
-  #define ExePath "..\target\release\stardust.exe"
+  #define ExePath "..\target\release\nebulance.exe"
 #endif
 
 [Setup]
-AppId={{3FFB74CC-7461-46AE-8603-26436A9CA035}
+AppId={{95E2EF4F-1850-4D15-B469-7B7BA438C8A8}
 AppName={#AppName}
 AppVersion={#AppVersion}
 AppVerName={#AppName} {#AppVersion}
@@ -24,9 +24,9 @@ DefaultDirName={autopf}\{#AppName}
 DefaultGroupName={#AppName}
 DisableProgramGroupPage=yes
 OutputDir=..\dist
-OutputBaseFilename=Stardust-{#AppVersion}-setup
-SetupIconFile=..\assets\stardust.ico
-UninstallDisplayIcon={app}\stardust.exe
+OutputBaseFilename=Nebulance-{#AppVersion}-setup
+SetupIconFile=..\assets\nebulance.ico
+UninstallDisplayIcon={app}\nebulance.exe
 UninstallDisplayName={#AppName}
 Compression=lzma2/max
 SolidCompression=yes
@@ -43,18 +43,18 @@ Name: "brazilianportuguese"; MessagesFile: "compiler:Languages\BrazilianPortugue
 Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{cm:AdditionalIcons}"
 
 [Files]
-Source: "{#ExePath}"; DestDir: "{app}"; DestName: "stardust.exe"; Flags: ignoreversion
+Source: "{#ExePath}"; DestDir: "{app}"; DestName: "nebulance.exe"; Flags: ignoreversion
 Source: "..\README.txt"; DestDir: "{app}"; Flags: ignoreversion isreadme; Languages: english
 Source: "..\README.txt"; DestDir: "{app}"; Flags: ignoreversion; Languages: brazilianportuguese
 Source: "..\LEIAME.txt"; DestDir: "{app}"; Flags: ignoreversion isreadme; Languages: brazilianportuguese
 Source: "..\LEIAME.txt"; DestDir: "{app}"; Flags: ignoreversion; Languages: english
 
 [Icons]
-Name: "{group}\{#AppName}"; Filename: "{app}\stardust.exe"; WorkingDir: "{app}"
+Name: "{group}\{#AppName}"; Filename: "{app}\nebulance.exe"; WorkingDir: "{app}"
 Name: "{group}\Readme"; Filename: "{app}\README.txt"
 Name: "{group}\Leia-me"; Filename: "{app}\LEIAME.txt"
 Name: "{group}\{cm:UninstallProgram,{#AppName}}"; Filename: "{uninstallexe}"
-Name: "{autodesktop}\{#AppName}"; Filename: "{app}\stardust.exe"; WorkingDir: "{app}"; Tasks: desktopicon
+Name: "{autodesktop}\{#AppName}"; Filename: "{app}\nebulance.exe"; WorkingDir: "{app}"; Tasks: desktopicon
 
 [Run]
-Filename: "{app}\stardust.exe"; Description: "{cm:LaunchProgram,{#AppName}}"; Flags: nowait postinstall skipifsilent
+Filename: "{app}\nebulance.exe"; Description: "{cm:LaunchProgram,{#AppName}}"; Flags: nowait postinstall skipifsilent

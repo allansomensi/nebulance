@@ -692,8 +692,8 @@ static EXACT: &[(&str, &str)] = &[
         "Junte as 8: vida extra e muitos pontos.",
     ),
     (
-        "Collect the letters S-T-A-R-D-U-S-T.",
-        "Junte as letras S-T-A-R-D-U-S-T.",
+        "Collect the letters N-E-B-U-L-A-N-C-E.",
+        "Junte as letras N-E-B-U-L-A-N-C-E.",
     ),
     ("Collector", "Colecionador"),
     (
@@ -1294,8 +1294,8 @@ static EXACT: &[(&str, &str)] = &[
     ("ICE paint", "Pintura GELO"),
     ("ICE trail", "Rastro GELO"),
     (
-        "IN MEMORY OF THE STARDUST PROBE",
-        "EM MEMÓRIA DA SONDA STARDUST",
+        "IN MEMORY OF THE NEBULANCE PROBE",
+        "EM MEMÓRIA DA SONDA NEBULANCE",
     ),
     ("INSIGNIA ???", "INSÍGNIA ???"),
     (
@@ -1381,7 +1381,7 @@ static EXACT: &[(&str, &str)] = &[
         "Pintura LENDÁRIA para todas as naves",
     ),
     ("LETTERS", "LETRAS"),
-    ("LETTERS S-T-A-R-D-U-S-T", "LETRAS S-T-A-R-D-U-S-T"),
+    ("LETTERS N-E-B-U-L-A-N-C-E", "LETRAS N-E-B-U-L-A-N-C-E"),
     ("LIEUTENANT", "TENENTE"),
     ("LIEUTENANT COLONEL", "TENENTE-CORONEL"),
     ("LIGHT TRIGGER", "GATILHO LEVE"),
@@ -1653,7 +1653,7 @@ static EXACT: &[(&str, &str)] = &[
     ("PRISM", "PRISMA"),
     ("PROBE", "SONDA"),
     (
-        "PROBE ship and STARDUST trail",
+        "PROBE ship and COSMIC DUST trail",
         "Nave SONDA e rastro POEIRA ESTELAR",
     ),
     ("PROGRESS ERASED", "PROGRESSO APAGADO"),
@@ -1911,8 +1911,8 @@ static EXACT: &[(&str, &str)] = &[
     ("STAR SEQUENCE", "SEQUÊNCIA DAS ESTRELAS"),
     ("STAR VAULT", "COFRE ESTELAR"),
     (
-        "STARDUST words / Motherships",
-        "Palavras STARDUST / Naves-Mãe",
+        "NEBULANCE words / Motherships",
+        "Palavras NEBULANCE / Naves-Mãe",
     ),
     ("START .............. pause", "START .............. pausa"),
     ("STATS", "NÚMEROS"),
@@ -2216,8 +2216,8 @@ static EXACT: &[(&str, &str)] = &[
         "A Rainha estava certa: o Enxame só queria passar.",
     ),
     (
-        "The STARDUST probe was coming back from a distant comet",
-        "A sonda STARDUST voltava de um cometa distante",
+        "The NEBULANCE probe was coming back from a distant comet",
+        "A sonda NEBULANCE voltava de um cometa distante",
     ),
     (
         "The Serpent was the guardian of the path. It heard first: a silence that swallows stars.",
@@ -2293,15 +2293,15 @@ static EXACT: &[(&str, &str)] = &[
         "O escudo volta depois de 25 s sem levar dano.",
     ),
     (
-        "The ship of the Stardust mission. 50% bigger coin magnet.",
-        "A nave da missão Stardust. Ímã de moedas 50% maior.",
+        "The ship of the Nebulance mission. 50% bigger coin magnet.",
+        "A nave da missão Nebulance. Ímã de moedas 50% maior.",
     ),
     (
         "The shop's DAMAGE CORE makes every weapon stronger.",
         "O NÚCLEO DE DANO da loja deixa todas as armas mais fortes.",
     ),
     (
-        "The stardust is only dust again.",
+        "The cosmic dust is only dust again.",
         "A poeira estelar é só poeira de novo.",
     ),
     ("The weapon lost 2 levels.", "A arma perdeu 2 níveis."),
@@ -2574,7 +2574,7 @@ static EXACT: &[(&str, &str)] = &[
         "cartas você ganha mais espaços.",
     ),
     (
-        "carrying samples of stardust... and something more.",
+        "carrying samples of cosmic dust... and something more.",
         "trazendo amostras de poeira estelar... e algo mais.",
     ),
     ("coin on every kill.", "moeda em cada abate."),
@@ -2592,7 +2592,7 @@ static EXACT: &[(&str, &str)] = &[
         "is on the golden band. 3 locks.",
         "estiver na faixa dourada. 3 travas.",
     ),
-    ("it was just stardust", "só tinha poeira estelar"),
+    ("it was just cosmic dust", "só tinha poeira estelar"),
     ("no card equipped", "nenhuma carta equipada"),
     ("note by note", "nota por nota"),
     (

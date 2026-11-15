@@ -1,6 +1,6 @@
 //! THE SIGNAL: the hidden last fight. It waits behind the final boss of the campaign.
 //!
-//! The STARDUST probe brought back dust and a signal; the signal called the Swarm. When the
+//! The NEBULANCE probe brought back dust and a signal; the signal called the Swarm. When the
 //! Supreme Queen falls, the signal itself wakes up. It has three phases, each with its own
 //! rules:
 //!
@@ -318,7 +318,7 @@ impl Game {
                     self.ach(ach::SIGNAL_LOST);
                     self.banner = Some((
                         "THE SIGNAL GOES SILENT".into(),
-                        "The stardust is only dust again.".into(),
+                        "The cosmic dust is only dust again.".into(),
                         5.0,
                     ));
                 }

@@ -161,7 +161,7 @@ pub fn set_pixel_scale(k_raw: f32) {
             fonts.queue.extend(chars.iter().map(|c| (true, i, *c)));
         }
     }
-    if crate::dev_env("STARDUST_FONTBENCH").is_some() {
+    if crate::dev_env("NEBULANCE_FONTBENCH").is_some() {
         eprintln!(
             "FONTS k={k} took {:?}, {} glyphs queued",
             t0.elapsed(),
@@ -359,7 +359,7 @@ pub fn panel(x: f32, y: f32, w: f32, h: f32, border: Color) {
 }
 
 pub fn logo(y: f32, time: f32) {
-    let title = "STARDUST";
+    let title = "NEBULANCE";
     let mut size = 84.0;
     let mut total = title_width(title, size);
     if total > W - 40.0 {

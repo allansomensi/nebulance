@@ -217,17 +217,17 @@ pub fn system_lang() -> u8 {
 pub fn data_dir() -> PathBuf {
     #[cfg(target_os = "windows")]
     if let Ok(a) = std::env::var("APPDATA") {
-        return PathBuf::from(a).join("Stardust");
+        return PathBuf::from(a).join("Nebulance");
     }
     #[cfg(target_os = "macos")]
     if let Ok(h) = std::env::var("HOME") {
-        return PathBuf::from(h).join("Library/Application Support/Stardust");
+        return PathBuf::from(h).join("Library/Application Support/Nebulance");
     }
     if let Ok(x) = std::env::var("XDG_DATA_HOME") {
-        return PathBuf::from(x).join("stardust");
+        return PathBuf::from(x).join("nebulance");
     }
     if let Ok(h) = std::env::var("HOME") {
-        return PathBuf::from(h).join(".local/share/stardust");
+        return PathBuf::from(h).join(".local/share/nebulance");
     }
     PathBuf::from(".")
 }
@@ -411,7 +411,7 @@ impl Save {
 
     pub fn write(&self) {
         let mut o = String::new();
-        o.push_str("# Stardust save file\nversion=1\n");
+        o.push_str("# Nebulance save file\nversion=1\n");
         let mut kv = |k: &str, v: String| {
             o.push_str(k);
             o.push('=');
@@ -560,7 +560,7 @@ mod tests {
 
     #[test]
     fn saves_and_loads() {
-        let dir = std::env::temp_dir().join(format!("stardust-teste-{}", std::process::id()));
+        let dir = std::env::temp_dir().join(format!("nebulance-teste-{}", std::process::id()));
         // SAFETY: the only test that touches this variable.
         unsafe { std::env::set_var("XDG_DATA_HOME", &dir) };
         let mut s = Save::default();

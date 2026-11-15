@@ -1,5 +1,5 @@
 #![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
-//! STARDUST — a formation shoot 'em up with the look of 2000s shareware.
+//! NEBULANCE — a formation shoot 'em up with the look of 2000s shareware.
 
 mod art;
 mod audio;
@@ -57,7 +57,7 @@ fn window_conf() -> Conf {
     let mut big = [0u8; 64 * 64 * 4];
     big.copy_from_slice(&icon(64));
     Conf {
-        window_title: "Stardust".to_owned(),
+        window_title: "Nebulance".to_owned(),
         window_width: 1280,
         window_height: 720,
         high_dpi: true,
@@ -400,8 +400,8 @@ const TITLE_ITEMS: [&str; 8] = [
 
 const PROLOGUE: [&str; 9] = [
     "Year 2097.",
-    "The STARDUST probe was coming back from a distant comet",
-    "carrying samples of stardust... and something more.",
+    "The NEBULANCE probe was coming back from a distant comet",
+    "carrying samples of cosmic dust... and something more.",
     "In the dust there was a signal. And the signal called the SWARM.",
     "Millions of star insects surrounded Earth in attack formation.",
     "The fleet fell in hours. What's left: a hidden hangar, one ship and you.",
@@ -461,7 +461,7 @@ impl App {
         if self.pads.state.iter().any(|s| s.any_p) {
             self.pad_hints = true;
         }
-        if dev_env("STARDUST_PADHINTS").is_some() {
+        if dev_env("NEBULANCE_PADHINTS").is_some() {
             self.pad_hints = true;
         }
         let b = &self.save.binds;
@@ -781,38 +781,38 @@ impl App {
             g.player.lives = 99;
             g.player.level = 5;
         }
-        if let Some(w) = dev_env("STARDUST_WEAPON").and_then(|v| v.parse::<usize>().ok()) {
+        if let Some(w) = dev_env("NEBULANCE_WEAPON").and_then(|v| v.parse::<usize>().ok()) {
             g.player.weapon = WEAPONS[w.min(WEAPONS.len() - 1)];
         }
-        if dev_env("STARDUST_SHOP").is_some() {
+        if dev_env("NEBULANCE_SHOP").is_some() {
             g.debug_shop();
         }
-        if dev_env("STARDUST_EVOLVE").is_some() {
+        if dev_env("NEBULANCE_EVOLVE").is_some() {
             g.player.level = 5;
             g.player.evolved_weapon = Some(g.player.weapon);
         }
-        if dev_env("STARDUST_DROPS").is_some() {
+        if dev_env("NEBULANCE_DROPS").is_some() {
             g.debug_showcase();
         }
-        if let Some(k) = dev_env("STARDUST_MINIGAME").and_then(|v| v.parse::<usize>().ok()) {
+        if let Some(k) = dev_env("NEBULANCE_MINIGAME").and_then(|v| v.parse::<usize>().ok()) {
             g.debug_minigame(k);
         }
-        if dev_env("STARDUST_LETTERS").is_some() {
+        if dev_env("NEBULANCE_LETTERS").is_some() {
             g.debug_letters();
         }
-        if dev_env("STARDUST_BLESS").is_some() {
+        if dev_env("NEBULANCE_BLESS").is_some() {
             g.debug_bless();
         }
-        if dev_env("STARDUST_ROOM").is_some() {
+        if dev_env("NEBULANCE_ROOM").is_some() {
             g.debug_room();
         }
-        if let Some(ph) = dev_env("STARDUST_SIGNAL").and_then(|v| v.parse::<u8>().ok()) {
+        if let Some(ph) = dev_env("NEBULANCE_SIGNAL").and_then(|v| v.parse::<u8>().ok()) {
             g.dbg_signal = Some(ph);
         }
-        if dev_env("STARDUST_DUO").is_some() {
+        if dev_env("NEBULANCE_DUO").is_some() {
             g.co.beam_t = 60.0;
         }
-        if dev_env("STARDUST_STAR").is_some() {
+        if dev_env("NEBULANCE_STAR").is_some() {
             g.debug_star();
         }
         self.game = Some(g);
@@ -1350,20 +1350,20 @@ impl App {
                 self.logo_party = 4.0;
             }
         }
-        // typing STARDUST
+        // typing NEBULANCE
         for c in &inp.chars {
             self.typed.extend(c.to_uppercase());
             if self.typed.chars().count() > 12 {
                 self.typed.remove(0);
             }
-            if self.typed.ends_with("STARDUST") {
+            if self.typed.ends_with("NEBULANCE") {
                 self.typed.clear();
                 self.logo_party = 5.0;
                 self.audio.play(Sfx::Sparkle);
-                for i in 0..8 {
+                for i in 0..9 {
                     self.fx.burst(
-                        vec2(86.0 + i as f32 * 44.0, 190.0),
-                        ui::hsl(i as f32 / 8.0, 0.9, 0.6),
+                        vec2(86.0 + i as f32 * 39.0, 190.0),
+                        ui::hsl(i as f32 / 9.0, 0.9, 0.6),
                         30,
                         260.0,
                     );
@@ -3369,7 +3369,7 @@ impl App {
                         format!("{} / {}", s.curses_shot, s.curses_taken),
                     ),
                     (
-                        "STARDUST words / Motherships",
+                        "NEBULANCE words / Motherships",
                         format!("{} / {}", s.words, s.ufos),
                     ),
                     ("Total experience", format!("{} XP", s.xp)),
@@ -3794,7 +3794,7 @@ impl App {
             }
         }
         ui::text_outline(
-            "STARDUST",
+            "NEBULANCE",
             W / 2.0,
             70.0,
             40.0,
@@ -3961,7 +3961,7 @@ impl App {
                 ("RIFTS (hexagon with ?)".into(), CYAN),
                 ("They open a quick minigame. Win to earn".into(), WHITE),
                 ("coins, levels, power-ups and cards.".into(), WHITE),
-                ("LETTERS S-T-A-R-D-U-S-T".into(), GOLD),
+                ("LETTERS N-E-B-U-L-A-N-C-E".into(), GOLD),
                 (
                     "Collect all 8: extra life and tons of points.".into(),
                     WHITE,
@@ -4143,7 +4143,7 @@ impl App {
         // left: logo, score and rank
         let title_size = (cw / 5.0).clamp(26.0, 54.0);
         ui::text_outline_fit(
-            "STARDUST",
+            "NEBULANCE",
             lc,
             70.0,
             title_size,
@@ -4292,11 +4292,11 @@ impl App {
                 cy += 28.0;
             }
         }
-        // S-T-A-R-D-U-S-T letters
+        // N-E-B-U-L-A-N-C-E letters
         cy += 8.0;
         ui::text("LETTERS", lx, cy, 14.0, DIM);
         let letters = g.letters_line();
-        let step = (cw / 8.0).min(30.0);
+        let step = (cw / letters.len() as f32).min(30.0);
         for (i, (ch, got)) in letters.iter().enumerate() {
             let x = lx + step * i as f32 + step / 2.0;
             let y = cy + 22.0;
@@ -4455,7 +4455,7 @@ impl App {
 // ---------------------------------------------------------------------------
 
 fn bot_input(g: &Game, t: f32) -> Input {
-    let shoot = dev_env("STARDUST_NOFIRE").is_none();
+    let shoot = dev_env("NEBULANCE_NOFIRE").is_none();
     let mut inp = Input {
         fire: shoot,
         fire_p: shoot,
@@ -4652,7 +4652,7 @@ async fn main() {
     }
     macroquad::rand::srand(miniquad::date::now() as u64);
 
-    if dev_env("STARDUST_FONTBENCH").is_some() {
+    if dev_env("NEBULANCE_FONTBENCH").is_some() {
         for k in [1.0, 2.0, 3.0, 4.0] {
             ui::set_pixel_scale(k);
         }
@@ -4688,7 +4688,7 @@ async fn main() {
         draw_rectangle(0.0, 0.0, l.ww, H, Color::from_rgba(4, 4, 16, 255));
         set_camera(&screens.play_cam(&l));
         ui::text_outline(
-            "STARDUST",
+            "NEBULANCE",
             W / 2.0,
             H / 2.0 - 20.0,
             48.0,
@@ -4736,9 +4736,9 @@ async fn main() {
         fx: Fx::default(),
         time: 0.0,
         quit: false,
-        autoplay: env("STARDUST_AUTOPLAY").is_some(),
-        god: env("STARDUST_GOD").is_some(),
-        start_wave: env("STARDUST_WAVE")
+        autoplay: env("NEBULANCE_AUTOPLAY").is_some(),
+        god: env("NEBULANCE_GOD").is_some(),
+        start_wave: env("NEBULANCE_WAVE")
             .and_then(|v| v.parse().ok())
             .unwrap_or(1),
         theme_t: 0.0,
@@ -4764,16 +4764,16 @@ async fn main() {
         inp2: Input::default(),
         panels: false,
     };
-    if let Some(x) = env("STARDUST_XP").and_then(|v| v.parse().ok()) {
+    if let Some(x) = env("NEBULANCE_XP").and_then(|v| v.parse().ok()) {
         app.save.xp = x;
     }
-    if let Some(s) = env("STARDUST_SHIP").and_then(|v| v.parse::<usize>().ok()) {
+    if let Some(s) = env("NEBULANCE_SHIP").and_then(|v| v.parse::<usize>().ok()) {
         app.save.ship = s.min(SHIPS.len() - 1);
     }
-    if env("STARDUST_SHEET").is_some() {
+    if env("NEBULANCE_SHEET").is_some() {
         app.screen = Screen::Sheet;
     }
-    match env("STARDUST_SCREEN").as_deref() {
+    match env("NEBULANCE_SCREEN").as_deref() {
         Some("cards") => app.screen = Screen::Album { sel: 9 },
         Some("options") => {
             app.screen = Screen::Options {
@@ -4844,13 +4844,13 @@ async fn main() {
         }
         _ => {}
     }
-    if env("STARDUST_COOP").is_some() {
+    if env("NEBULANCE_COOP").is_some() {
         app.coop = true;
     }
-    if let Some(d) = env("STARDUST_DIFF").and_then(|v| v.parse::<u8>().ok()) {
+    if let Some(d) = env("NEBULANCE_DIFF").and_then(|v| v.parse::<u8>().ok()) {
         app.save.diff = d.min(3);
     }
-    if let Some(m) = env("STARDUST_MODE").and_then(|v| v.parse::<u8>().ok()) {
+    if let Some(m) = env("NEBULANCE_MODE").and_then(|v| v.parse::<u8>().ok()) {
         app.save.mode = m;
     }
     app.apply_settings();
@@ -4859,8 +4859,8 @@ async fn main() {
     show_mouse(false);
     let mut rep = Repeat::default();
     // Development: CPU time spent per frame (update + draw submission).
-    let profile = dev_env("STARDUST_PROFILE").is_some();
-    let resize_test = dev_env("STARDUST_RESIZE").is_some();
+    let profile = dev_env("NEBULANCE_PROFILE").is_some();
+    let resize_test = dev_env("NEBULANCE_RESIZE").is_some();
     let mut prof = (0.0f64, 0u32, 0.0f64);
     loop {
         let dt = get_frame_time().min(1.0 / 30.0);

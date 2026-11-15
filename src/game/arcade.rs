@@ -1,11 +1,11 @@
 //! Arcade systems: tap-to-fire trigger with charged shot, purchasable autofire,
-//! the S-T-A-R-D-U-S-T letters, the mysterious Mothership, the Warp Gate,
+//! the N-E-B-U-L-A-N-C-E letters, the mysterious Mothership, the Warp Gate,
 //! time bonuses and extra shop items.
 
 use super::*;
 use std::f32::consts::TAU;
 
-pub const WORD: [char; 8] = ['S', 'T', 'A', 'R', 'D', 'U', 'S', 'T'];
+pub const WORD: [char; 9] = ['N', 'E', 'B', 'U', 'L', 'A', 'N', 'C', 'E'];
 
 struct Ufo {
     pos: Vec2,
@@ -28,7 +28,7 @@ pub struct Arcade {
     pub capacitor: bool,
     pub sight: bool,
     pub core: u32,
-    pub letters: [bool; 8],
+    pub letters: [bool; WORD.len()],
     pub words: u32,
     ufo: Option<Ufo>,
     ufo_t: f32,
@@ -117,7 +117,7 @@ impl Game {
                 self.arcade.autofire = true;
                 ("AUTOFIRE!", "for free, lucky you")
             }
-            80..=89 => ("EMPTY...", "it was just stardust"),
+            80..=89 => ("EMPTY...", "it was just cosmic dust"),
             _ => {
                 self.coins = (self.coins - 200.0).max(0.0);
                 ("A MOTH!", "ate 200 coins")
@@ -127,7 +127,7 @@ impl Game {
     }
 
     // -----------------------------------------------------------------------
-    // S-T-A-R-D-U-S-T letters
+    // N-E-B-U-L-A-N-C-E letters
     // -----------------------------------------------------------------------
 
     pub(super) fn arcade_on_kill(&mut self, e: &Enemy) {
@@ -151,7 +151,9 @@ impl Game {
     }
 
     fn drop_letter(&mut self, pos: Vec2) {
-        let missing: Vec<usize> = (0..8).filter(|&i| !self.arcade.letters[i]).collect();
+        let missing: Vec<usize> = (0..WORD.len())
+            .filter(|&i| !self.arcade.letters[i])
+            .collect();
         if let Some(&i) =
             missing.get(gen_range(0, missing.len().max(1)).min(missing.len().saturating_sub(1)))
         {
@@ -166,7 +168,7 @@ impl Game {
         self.fx
             .text(pp - vec2(0.0, 44.0), WORD[i].to_string(), GOLD, 30.0);
         if self.arcade.letters.iter().all(|l| *l) {
-            self.arcade.letters = [false; 8];
+            self.arcade.letters = [false; WORD.len()];
             self.arcade.words += 1;
             au.play(Sfx::Fanfare);
             au.play(Sfx::OneUp);
@@ -181,7 +183,7 @@ impl Game {
             self.events.push(Event::Word);
             self.ach(ach::SPELLER);
             self.banner = Some((
-                "S T A R D U S T !".into(),
+                "N E B U L A N C E !".into(),
                 format!("Extra life and +{} points", bonus),
                 3.0,
             ));

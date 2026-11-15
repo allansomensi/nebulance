@@ -32,7 +32,7 @@ impl Game {
         }
         draw_rectangle(0.0, 0.0, W, 34.0, Color::new(0.0, 0.0, 0.05, 0.55));
         for (i, (ch, got)) in self.letters_line().iter().enumerate() {
-            let x = W / 2.0 - 52.0 + i as f32 * 15.0;
+            let x = W / 2.0 - (arcade::WORD.len() - 1) as f32 * 7.5 + i as f32 * 15.0;
             ui::text_c(
                 &ch.to_string(),
                 x,
@@ -604,7 +604,7 @@ impl Game {
             Color::new(0.0, 0.0, 0.0, (t * 0.5).min(0.85)),
         );
         let lines: &[(&str, f32, Color)] = &[
-            ("STARDUST", 54.0, GOLD),
+            ("NEBULANCE", 54.0, GOLD),
             ("", 20.0, WHITE),
             ("CREATED BY", 18.0, PINK),
             ("Allan Somensi", 24.0, WHITE),
@@ -628,7 +628,7 @@ impl Game {
             ("Carriers, Chameleons, Mimics, Thieves,", 15.0, WHITE),
             ("Minelayers, Jumpers and a tamed Comet", 15.0, WHITE),
             ("", 20.0, WHITE),
-            ("IN MEMORY OF THE STARDUST PROBE", 18.0, PINK),
+            ("IN MEMORY OF THE NEBULANCE PROBE", 18.0, PINK),
             ("It went looking for comet dust", 15.0, WHITE),
             ("and brought back a story", 15.0, WHITE),
             ("", 20.0, WHITE),

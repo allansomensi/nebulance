@@ -458,6 +458,17 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "e1bcdd74c20ad5d95aacd60ef9ba40fdf77f767051040541df557b7a9b2a2121"
 
 [[package]]
+name = "nebulance"
+version = "0.1.0"
+dependencies = [
+ "embed-resource",
+ "gilrs",
+ "macroquad",
+ "sys-locale",
+ "windows-sys",
+]
+
+[[package]]
 name = "nix"
 version = "0.31.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -662,17 +673,6 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "b97fcaeba89edba30f044a10c6a3cc39df9c3f17d7cd829dd1446cab35f890e0"
 dependencies = [
  "maybe-uninit",
-]
-
-[[package]]
-name = "stardust"
-version = "0.1.0"
-dependencies = [
- "embed-resource",
- "gilrs",
- "macroquad",
- "sys-locale",
- "windows-sys",
 ]
 
 [[package]]

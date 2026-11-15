@@ -1,10 +1,10 @@
 =====================================================================
-                          S T A R D U S T
+                         N E B U L A N C E
                   a formation shoot 'em up  ·  v0.1.0
 =====================================================================
 
-Year 2097. The STARDUST probe came back from a distant comet carrying
-stardust... and a signal. The signal called the Swarm: millions of
+Year 2097. The NEBULANCE probe came back from a distant comet carrying
+cosmic dust... and a signal. The signal called the Swarm: millions of
 star insects in attack formation. The fleet fell in hours. What's
 left: a hidden hangar, one ship and you.
 
@@ -111,9 +111,9 @@ TIPS
 YOUR PROGRESS
 -------------
 Rank, cards, achievements, high scores and settings are saved in:
-  Windows:  %APPDATA%\Stardust\save.txt
-  Linux:    ~/.local/share/stardust/save.txt
-  macOS:    ~/Library/Application Support/Stardust/save.txt
+  Windows:  %APPDATA%\Nebulance\save.txt
+  Linux:    ~/.local/share/nebulance/save.txt
+  macOS:    ~/Library/Application Support/Nebulance/save.txt
 
 To reset everything: SETTINGS > GAME > ERASE PROGRESS.
 
@@ -121,13 +121,13 @@ To reset everything: SETTINGS > GAME > ERASE PROGRESS.
 CUSTOM MUSIC
 ------------
 The game composes its own chiptune soundtrack. To use your own
-music, create a "music" folder next to stardust.exe (or inside the
+music, create a "music" folder next to nebulance.exe (or inside the
 save folder) with .ogg or .wav files named:
   title, stage, boss, shop, final, credits,
   region1 ... region8 (one per region), special
 
 To export the original soundtrack as .wav:
-  stardust.exe --export-music
+  nebulance.exe --export-music
 
 
 WINDOWS WARNING

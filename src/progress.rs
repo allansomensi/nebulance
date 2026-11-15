@@ -511,7 +511,7 @@ pub const ACHS: &[AchDef] = &[
     h("Treasurer", "Open 5 secret reliquaries.", 900),
     a("Full Fleet", "Unlock all 10 ships.", 1500),
     a("Comet Hunter", "Defeat the Wild Comet.", 400),
-    a("Speller", "Collect the letters S-T-A-R-D-U-S-T.", 800),
+    a("Speller", "Collect the letters N-E-B-U-L-A-N-C-E.", 800),
     h(
         "Close Encounters",
         "Shoot down the mysterious Mothership.",
@@ -627,7 +627,7 @@ pub const HONORS: [Honor; 10] = [
     Honor {
         name: "EXPLORER INSIGNIA",
         feat: "Find a Secret Room.",
-        reward: "PROBE ship and STARDUST trail",
+        reward: "PROBE ship and COSMIC DUST trail",
         short: "PROBE",
         ach: ach::SECRET_ROOM,
     },

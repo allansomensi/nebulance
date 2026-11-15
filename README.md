@@ -1,4 +1,4 @@
-# Stardust
+# Nebulance
 
 A formation shoot 'em up with the soul of the 2000s shareware classics, written in Rust with
 [macroquad](https://macroquad.rs). Your ship only moves sideways, every tap of the fire button is a burst,
@@ -74,8 +74,8 @@ On Windows:
 cargo build --release
 ```
 
-The executable ends up in `target\release\stardust.exe`, with icon and version info (via `build.rs`).
-For the installer, open `installer/stardust.iss` in [Inno Setup 6](https://jrsoftware.org/isinfo.php) and
+The executable ends up in `target\release\nebulance.exe`, with icon and version info (via `build.rs`).
+For the installer, open `installer/nebulance.iss` in [Inno Setup 6](https://jrsoftware.org/isinfo.php) and
 click *Compile*.
 
 Cross-compiling from Linux (requires `gcc-mingw-w64-x86-64`):
@@ -153,24 +153,24 @@ cargo run --release --features dev
 
 | Variable | Effect |
 |---|---|
-| `STARDUST_AUTOPLAY=1` | a bot plays by itself |
-| `STARDUST_GOD=1` | 99 lives and weapon at level 5 |
-| `STARDUST_WAVE=N` | start at wave N (in the campaign, wave = level) |
-| `STARDUST_COOP=1` | two-player co-op (the bot flies both ships) |
-| `STARDUST_DUO=1` | co-op with the duo beam always on |
-| `STARDUST_SCENE=0..2` | boss fights start in darkness, rising ground or meteor shower |
-| `STARDUST_NOFIRE=1` | the bot does not shoot (to look at formations) |
-| `STARDUST_EVOLVE=1` | the starting weapon begins evolved at level 5 |
-| `STARDUST_SHOP=1` | opens the shop at the start with 3000 coins |
-| `STARDUST_PADHINTS=1` | hints always show gamepad buttons |
-| `STARDUST_PROFILE=1` | prints CPU time per frame and slow frames |
-| `STARDUST_RESIZE=1` | resizes the window to 4K after 4 s (fullscreen test) |
-| `STARDUST_FONTBENCH=1` | measures font rebuilds and exits |
-| `STARDUST_EASYBOSS=1` | bosses with 5% health |
-| `STARDUST_XP=N` | start with N experience |
-| `STARDUST_MODE=0..5` / `STARDUST_DIFF=0..3` | mode and difficulty used by the bot |
-| `STARDUST_WEAPON=N` / `STARDUST_SHIP=N` | starting weapon and ship |
-| `STARDUST_SCREEN=...` | open a screen directly (`help`, `cards`, `settings`, `hangar`, `archives`, ...) |
+| `NEBULANCE_AUTOPLAY=1` | a bot plays by itself |
+| `NEBULANCE_GOD=1` | 99 lives and weapon at level 5 |
+| `NEBULANCE_WAVE=N` | start at wave N (in the campaign, wave = level) |
+| `NEBULANCE_COOP=1` | two-player co-op (the bot flies both ships) |
+| `NEBULANCE_DUO=1` | co-op with the duo beam always on |
+| `NEBULANCE_SCENE=0..2` | boss fights start in darkness, rising ground or meteor shower |
+| `NEBULANCE_NOFIRE=1` | the bot does not shoot (to look at formations) |
+| `NEBULANCE_EVOLVE=1` | the starting weapon begins evolved at level 5 |
+| `NEBULANCE_SHOP=1` | opens the shop at the start with 3000 coins |
+| `NEBULANCE_PADHINTS=1` | hints always show gamepad buttons |
+| `NEBULANCE_PROFILE=1` | prints CPU time per frame and slow frames |
+| `NEBULANCE_RESIZE=1` | resizes the window to 4K after 4 s (fullscreen test) |
+| `NEBULANCE_FONTBENCH=1` | measures font rebuilds and exits |
+| `NEBULANCE_EASYBOSS=1` | bosses with 5% health |
+| `NEBULANCE_XP=N` | start with N experience |
+| `NEBULANCE_MODE=0..5` / `NEBULANCE_DIFF=0..3` | mode and difficulty used by the bot |
+| `NEBULANCE_WEAPON=N` / `NEBULANCE_SHIP=N` | starting weapon and ship |
+| `NEBULANCE_SCREEN=...` | open a screen directly (`help`, `cards`, `settings`, `hangar`, `archives`, ...) |
 
 With `dev`, any on-screen text missing from the translation table is printed to stderr as `I18N-MISS`
 while the game runs in Portuguese.

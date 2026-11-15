@@ -413,7 +413,7 @@ impl Game {
             (kind, variant, final_boss, lvl)
         };
         let mut boss = Boss::new(kind, lvl, final_boss, variant);
-        if crate::dev_env("STARDUST_EASYBOSS").is_some() {
+        if crate::dev_env("NEBULANCE_EASYBOSS").is_some() {
             boss.hp *= 0.05;
             boss.max_hp *= 0.05;
         }
@@ -424,7 +424,7 @@ impl Game {
         ) {
             self.boss_trait_begin();
         }
-        if let Some(k) = crate::dev_env("STARDUST_SCENE").and_then(|v| v.parse::<usize>().ok()) {
+        if let Some(k) = crate::dev_env("NEBULANCE_SCENE").and_then(|v| v.parse::<usize>().ok()) {
             self.debug_scene(k);
         }
         au.music(Some(if final_boss || variant || self.enc.void {
